@@ -1,0 +1,87 @@
+/* =====================================================================
+   FRAGMENT — the design system's reimagined "card": a partial piece of
+   memory, edges dissolved, framed by space not borders. Surfaces one at
+   a time; never a grid of equals. (doc 03 §5, doc 11)
+   ===================================================================== */
+.fragment {
+  width: min(34rem, 82vw);
+  display: block;
+}
+.alignLeft { margin-right: auto; }
+.alignRight { margin-left: auto; }
+
+.link {
+  display: grid;
+  gap: 1.25rem;
+  color: var(--text);
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  isolation: isolate;
+}
+/* a glow source behind the fragment, in its own collection's light */
+.imageWrap::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--tone), transparent 70%);
+  opacity: 0;
+  filter: blur(44px);
+  transition: opacity var(--breath-slow) var(--ease-surface);
+  pointer-events: none;
+}
+.fragment:hover .imageWrap::before { opacity: 0.24; }
+
+.image {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  /* edges dissolve into the Void — the mind completes the rest */
+  -webkit-mask-image: radial-gradient(120% 120% at 50% 45%, #000 52%, transparent 100%);
+  mask-image: radial-gradient(120% 120% at 50% 45%, #000 52%, transparent 100%);
+}
+.imageInner {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.02);
+  filter: grayscale(0.15) brightness(0.9) contrast(1.02);
+  transition:
+    transform var(--breath-deep) var(--ease-surface),
+    filter var(--breath-slow) var(--ease-surface);
+}
+.fragment:hover .imageInner {
+  transform: scale(1.06);
+  filter: grayscale(0) brightness(1) contrast(1.05);
+}
+
+.meta { display: grid; gap: 0.5rem; }
+.name {
+  font-family: var(--font-memory);
+  font-size: var(--text-headline);
+  line-height: 1.02;
+  color: var(--color-bone-100);
+}
+.state {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--text-subhead);
+  color: var(--text-quiet);
+  max-width: 26ch;
+}
+.enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  transition: color var(--breath-quick) var(--ease-surface);
+}
+.fragment:hover .enter { color: var(--tone); }
+.arrow { transition: transform var(--breath) var(--ease-surface); }
+.fragment:hover .arrow { transform: translateX(6px); }

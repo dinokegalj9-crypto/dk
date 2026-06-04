@@ -74,8 +74,10 @@
 }
 
 /* Per-collection accent retint */
-[data-collection="after-you-left"] { --accent: var(--color-ember-rose); }
+[data-collection="waking"] { --accent: var(--color-ember-amber); }
 [data-collection="submerged"] { --accent: var(--color-ember-dusk); }
+[data-collection="residue"] { --accent: var(--color-ember-rose); }
+[data-collection="after-you-left"] { --accent: var(--color-ember-rose); }
 [data-collection="long-afternoon"] { --accent: var(--color-ember-gold); }
 
 /* =====================================================================
