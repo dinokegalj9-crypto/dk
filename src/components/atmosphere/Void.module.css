@@ -1,0 +1,34 @@
+/* =====================================================================
+   THE VOID — the persistent background environment (doc: design-system).
+   Eigengrau, the warm dark behind closed eyes, that the hero surfaces
+   out of. Sits behind everything; never interactive.
+   ===================================================================== */
+.void {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 85% at 50% 14%, var(--color-ink-700), transparent 58%),
+    radial-gradient(130% 120% at 50% 126%, var(--color-ink-900), transparent 55%),
+    var(--color-ink-800);
+  animation: void-breathe 26s ease-in-out infinite;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes void-breathe {
+  0%, 100% { filter: brightness(1) saturate(1); }
+  50% { filter: brightness(1.07) saturate(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .void { animation: none; }
+}

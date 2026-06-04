@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   SENSORIUM — TOKENS (Tailwind v4 @theme: single source of truth)
+   Mirrors design-system/css/tokens.css. Defining tokens here exposes
+   them BOTH as Tailwind utilities (bg-ink-800, font-memory…) AND as
+   CSS custom properties consumable everywhere (var(--color-ink-800)).
+   ===================================================================== */
+@theme {
+  /* Ink — the warm near-black void we surface from */
+  --color-ink-900: #060504;
+  --color-ink-800: #0b0a09;
+  --color-ink-700: #121110;
+  --color-ink-600: #1a1714;
+  --color-ink-500: #241f1a;
+
+  /* Bone — warm off-white */
+  --color-bone-100: #fbf7f0;
+  --color-bone-200: #ede7dd;
+  --color-bone-300: #d7cfc2;
+
+  /* Ash — muted grey-taupe */
+  --color-ash-300: #a8a095;
+  --color-ash-400: #8c857b;
+  --color-ash-500: #6b655c;
+  --color-ash-600: #4a463f;
+
+  /* Ember — one warm accent per collection, used as light not fill */
+  --color-ember-amber: #c9824e;
+  --color-ember-rose: #b66e6c;
+  --color-ember-dusk: #5e7588;
+  --color-ember-gold: #c7a352;
+
+  /* The two voices */
+  --font-memory: "EB Garamond", "Hoefler Text", Garamond, "Times New Roman", serif;
+  --font-quiet: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  /* Fluid display scale */
+  --text-display-xl: clamp(4rem, 2rem + 9vw, 9rem);
+  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5rem);
+  --text-headline: clamp(2rem, 1.4rem + 2.6vw, 3rem);
+  --text-subhead: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+
+  /* Motion — easing as Tailwind timing functions */
+  --ease-surface: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Semantic + motion tokens (plain custom properties) ------------- */
+:root {
+  --ground: var(--color-ink-800);
+  --ground-deep: var(--color-ink-900);
+  --text: var(--color-bone-200);
+  --text-quiet: var(--color-ash-400);
+  --text-faint: var(--color-ash-500);
+  --line: rgba(237, 231, 221, 0.16);
+  --line-faint: rgba(237, 231, 221, 0.06);
+  --veil-ink-92: rgba(6, 5, 4, 0.92);
+  --accent: var(--color-ember-amber); /* the candle in the dark room */
+
+  --halo-accent: 0 0 0.04em rgba(201, 130, 78, 0.5), 0 0 32px -8px var(--accent);
+  --glow-accent-sm: 0 0 24px -6px var(--accent);
+  --vignette: inset 0 0 220px 40px rgba(6, 5, 4, 0.7);
+
+  --breath-quick: 320ms;
+  --breath: 600ms;
+  --breath-slow: 1200ms;
+  --breath-deep: 2400ms;
+  --breath-ambient: 18s;
+
+  --tracking-label: 0.12em;
+  --gutter: clamp(1.5rem, 4vw, 6rem);
+  --grain-opacity: 0.045;
+}
+
+/* Per-collection accent retint */
+[data-collection="after-you-left"] { --accent: var(--color-ember-rose); }
+[data-collection="submerged"] { --accent: var(--color-ember-dusk); }
+[data-collection="long-afternoon"] { --accent: var(--color-ember-gold); }
+
+/* =====================================================================
+   BASE — the atmospheric ground + the living grain + vignette
+   ===================================================================== */
+html {
+  scroll-behavior: smooth;
+  background: var(--ground-deep);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--text);
+  background-color: var(--ground);
+  background-image:
+    radial-gradient(120% 80% at 50% -10%, var(--color-ink-700), transparent 60%),
+    radial-gradient(100% 100% at 50% 120%, var(--color-ink-900), transparent 55%);
+  background-attachment: fixed;
+  font-family: var(--font-quiet);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* The vignette — the room darkens at its edges */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  box-shadow: var(--vignette);
+  pointer-events: none;
+  z-index: 500;
+}
+
+/* The grain — analog texture over everything */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -200%;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-drift var(--breath-ambient) steps(6) infinite;
+}
+
+@keyframes grain-drift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-2%, 4%); }
+  80% { transform: translate(4%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+::selection { background: var(--accent); color: var(--color-ink-900); }
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--ground), 0 0 0 2px var(--accent), var(--glow-accent-sm);
+  border-radius: 2px;
+}
+
+/* ---- Typographic helpers (the brand voice) ------------------------- */
+.t-label {
+  font-family: var(--font-quiet);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+  font-weight: 500;
+}
+.t-memory { font-family: var(--font-memory); }
+.glow-word { color: var(--color-bone-100); text-shadow: var(--halo-accent); }
+
+/* A still Sensorium is still Sensorium */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body::after { animation: none; }
+}
