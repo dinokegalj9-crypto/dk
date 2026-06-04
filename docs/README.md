@@ -21,6 +21,7 @@ and the soul is defined first, in the Brand Guidelines.
 | 07 | [Photography Guidelines](./07-photography-guidelines.md) | Image language, light, subject, treatment |
 | 08 | [Packaging Guidelines](./08-packaging-guidelines.md) | Object, material, ritual, unboxing |
 | 09 | [Website Architecture](./09-website-architecture.md) | Every launch page: purpose, emotion, content, UX |
+| 10 | [Project Architecture](./10-project-architecture.md) | The build: stack, structure, rendering, conventions |
 
 ## How to read these
 
