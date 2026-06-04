@@ -20,6 +20,7 @@ and the soul is defined first, in the Brand Guidelines.
 | 06 | [Content Guidelines](./06-content-guidelines.md) | Voice, copy patterns, naming, microcopy |
 | 07 | [Photography Guidelines](./07-photography-guidelines.md) | Image language, light, subject, treatment |
 | 08 | [Packaging Guidelines](./08-packaging-guidelines.md) | Object, material, ritual, unboxing |
+| 09 | [Website Architecture](./09-website-architecture.md) | Every launch page: purpose, emotion, content, UX |
 
 ## How to read these
 
