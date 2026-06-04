@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="default">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sensorium — Design System</title>
+  <meta name="description" content="The living design system for Sensorium. Scent is the trigger. Memory is the product." />
+
+  <!-- The two voices. Self-host in production; CDN here for the styleguide. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./css/sensorium.css" />
+
+  <style>
+    /* Styleguide-only scaffolding (not part of the system) */
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-4); }
+    .swatch { display: grid; gap: var(--space-2); }
+    .swatch__chip { height: 84px; border-radius: var(--radius-sm); border: 1px solid var(--line-faint); }
+    .specimen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-7); }
+    .scale-row { display: grid; grid-template-columns: 7rem 1fr; gap: var(--space-5); align-items: baseline; padding-block: var(--space-3); border-top: 1px solid var(--line-faint); }
+    .space-bar { height: 14px; background: var(--accent); opacity: 0.5; border-radius: var(--radius-sm); }
+    .demo-box { padding: var(--space-6); border: 1px solid var(--line-faint); border-radius: var(--radius-soft); display: grid; place-items: center; min-height: 160px; gap: var(--space-4); }
+    .ds-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+    .ds-toc a { color: var(--text-quiet); font-size: var(--type-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+    .ds-toc a:hover { color: var(--accent); }
+    .ds-section-label { display: flex; align-items: baseline; gap: var(--space-4); margin-bottom: var(--space-6); }
+    .ds-section-label .num { font-family: var(--font-memory); color: var(--accent); font-size: var(--type-subhead); font-style: italic; }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation: hidden until summoned -->
+  <nav class="veil-nav" aria-label="Primary">
+    <a class="veil-nav__mark" href="#top">Sensorium</a>
+    <button class="veil-nav__summon" data-summon aria-expanded="false" aria-controls="menu" aria-label="Open menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <a href="#colors">Colour</a>
+    <a href="#type">Typography</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#fragments">Fragments</a>
+    <a href="#motion">Motion</a>
+  </div>
+
+  <!-- THRESHOLD -->
+  <header class="threshold field" id="top">
+    <div class="frame">
+      <p class="t-label" data-surface>The Sensorium Design System</p>
+      <h1 class="threshold__word glow-word" data-surface data-stagger="1">Residue</h1>
+      <p class="threshold__line" data-surface data-stagger="2">
+        Some things you didn't lose. You just stopped visiting them.
+      </p>
+    </div>
+  </header>
+
+  <main class="frame flow-loose" style="padding-bottom: var(--space-12);">
+
+    <nav class="ds-toc section" aria-label="Sections">
+      <a href="#colors">01 · Colour</a>
+      <a href="#type">02 · Typography</a>
+      <a href="#spacing">03 · Spacing</a>
+      <a href="#layout">04 · Layout</a>
+      <a href="#light">05 · Light &amp; Depth</a>
+      <a href="#buttons">06 · Buttons</a>
+      <a href="#fragments">07 · Fragments</a>
+      <a href="#forms">08 · Forms</a>
+      <a href="#motion">09 · Motion</a>
+      <a href="#components">10 · Components</a>
+    </nav>
+
+    <!-- 01 · COLOUR -->
+    <section class="section" id="colors">
+      <div class="ds-section-label"><span class="num">01</span><h2 class="t-headline">Colour</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Low-light and tonal, drawn from memory and dusk. No pure black, no pure white. The accent is a single warm ember — used as <em>light</em>, never as fill.</p>
+
+      <h3 class="t-label" style="margin-top: var(--space-7)">Ink — the void</h3>
+      <div class="swatches" data-surface-group>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ink-900)"></div><span class="t-caption">ink-900</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ink-800)"></div><span class="t-caption">ink-800 · ground</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ink-700)"></div><span class="t-caption">ink-700</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ink-600)"></div><span class="t-caption">ink-600 · raised</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ink-500)"></div><span class="t-caption">ink-500</span></div>
+      </div>
+
+      <h3 class="t-label" style="margin-top: var(--space-7)">Bone &amp; Ash — the voices</h3>
+      <div class="swatches" data-surface-group>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--bone-100)"></div><span class="t-caption">bone-100</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--bone-200)"></div><span class="t-caption">bone-200 · text</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--bone-300)"></div><span class="t-caption">bone-300</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ash-400)"></div><span class="t-caption">ash-400 · quiet</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ash-500)"></div><span class="t-caption">ash-500 · faint</span></div>
+      </div>
+
+      <h3 class="t-label" style="margin-top: var(--space-7)">Ember — one accent per collection</h3>
+      <div class="swatches" data-surface-group>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ember-amber); box-shadow: var(--glow-accent-sm)"></div><span class="t-caption">amber · default</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ember-rose)"></div><span class="t-caption">rose · after you left</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ember-dusk)"></div><span class="t-caption">dusk · submerged</span></div>
+        <div class="swatch" data-surface><div class="swatch__chip" style="background:var(--ember-gold)"></div><span class="t-caption">gold · long afternoon</span></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 02 · TYPOGRAPHY -->
+    <section class="section" id="type">
+      <div class="ds-section-label"><span class="num">02</span><h2 class="t-headline">Typography</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Two voices in tension: the <em>memory voice</em> (serif) carries emotion; the <em>quiet voice</em> (sans) recedes into utility.</p>
+
+      <div class="flow" style="margin-top: var(--space-7)">
+        <div class="scale-row" data-surface><span class="t-label">display-xl</span><span class="t-display-xl">Undertow</span></div>
+        <div class="scale-row" data-surface><span class="t-label">display</span><span class="t-display">The Long Afternoon</span></div>
+        <div class="scale-row" data-surface><span class="t-label">headline</span><span class="t-headline">After everyone left</span></div>
+        <div class="scale-row" data-surface><span class="t-label">subhead</span><span class="t-subhead">the hour after the rain stops</span></div>
+        <div class="scale-row" data-surface><span class="t-label">body-lg</span><span class="t-body-lg">You know this room. You have been here before, half-asleep, completely safe.</span></div>
+        <div class="scale-row" data-surface><span class="t-label">body</span><span class="t-body">The pull of water you can't see, deciding to let it take you.</span></div>
+        <div class="scale-row" data-surface><span class="t-label">caption</span><span class="t-caption">Composition · cedar, cold iron, the air before snow</span></div>
+      </div>
+
+      <blockquote class="pull-quote has-glow" style="margin-top: var(--space-9)" data-surface>
+        We name what you become, not what's in the vial.
+      </blockquote>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 03 · SPACING -->
+    <section class="section" id="spacing">
+      <div class="ds-section-label"><span class="num">03</span><h2 class="t-headline">Spacing</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Space is the loudest element. A modular scale of breaths; generous by default.</p>
+      <div class="flow-tight" style="margin-top: var(--space-7)">
+        <div class="scale-row" data-surface><span class="t-label">space-2 · 8</span><div class="space-bar" style="width: var(--space-2)"></div></div>
+        <div class="scale-row" data-surface><span class="t-label">space-4 · 16</span><div class="space-bar" style="width: var(--space-4)"></div></div>
+        <div class="scale-row" data-surface><span class="t-label">space-6 · 32</span><div class="space-bar" style="width: var(--space-6)"></div></div>
+        <div class="scale-row" data-surface><span class="t-label">space-7 · breath</span><div class="space-bar" style="width: var(--space-7)"></div></div>
+        <div class="scale-row" data-surface><span class="t-label">space-9 · pause</span><div class="space-bar" style="width: var(--space-9)"></div></div>
+        <div class="scale-row" data-surface><span class="t-label">space-11 · 192</span><div class="space-bar" style="width: var(--space-11)"></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 04 · LAYOUT -->
+    <section class="section" id="layout">
+      <div class="ds-section-label"><span class="num">04</span><h2 class="t-headline">Layout</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>The frame is part of the image. Asymmetry over the centered grid — memory is off-balance.</p>
+      <div class="demo-box offset-left" style="max-width: 60%; margin-top: var(--space-6)" data-surface>
+        <span class="t-caption">.frame · .offset-left — content settles off-center</span>
+      </div>
+      <div class="prose--narrow" style="margin-top: var(--space-6)" data-surface>
+        <p class="t-body">.prose--narrow holds an intimate reading column at 44ch, so the words sit in a pool of quiet rather than stretching the full width of the screen.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 05 · LIGHT & DEPTH -->
+    <section class="section" id="light">
+      <div class="ds-section-label"><span class="num">05</span><h2 class="t-headline">Light &amp; Depth</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Our "shadows". A dark brand earns depth through <em>light</em> and <em>glow</em>, not drop shadows.</p>
+      <div class="specimen-grid" style="margin-top: var(--space-7)">
+        <div class="demo-box" data-surface><span class="t-caption">glow-accent-sm</span><span class="t-display t-memory" style="box-shadow: var(--glow-accent-sm); border-radius: var(--radius-sm); padding: var(--space-4)">·</span></div>
+        <div class="demo-box has-glow" data-surface><span class="t-caption">has-glow (behind)</span><span class="t-subhead t-memory t-italic">a source of light</span></div>
+        <div class="demo-box" data-surface><span class="t-caption">glow-word · halo</span><span class="t-display t-memory glow-word">Ember</span></div>
+        <div class="demo-box" style="box-shadow: var(--shadow-soft)" data-surface><span class="t-caption">shadow-soft · found objects only</span></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 06 · BUTTONS -->
+    <section class="section" id="buttons">
+      <div class="ds-section-label"><span class="num">06</span><h2 class="t-headline">Buttons</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Nearly invisible. Verbs of keeping and continuing, not buying and converting.</p>
+      <div class="specimen-grid" style="margin-top: var(--space-7)">
+        <div class="demo-box" data-surface><span class="t-caption">primary · keep</span><button class="btn btn--keep">Keep it</button></div>
+        <div class="demo-box" data-surface><span class="t-caption">text · hairline</span><button class="btn">Read the state</button></div>
+        <div class="demo-box" data-surface><span class="t-caption">onward</span><button class="btn btn--onward">Descend <span class="btn__mark">→</span></button></div>
+        <div class="demo-box" data-surface><span class="t-caption">ghost</span><button class="btn btn--ghost">Not now</button></div>
+        <div class="demo-box" data-surface><span class="t-caption">disabled</span><button class="btn btn--keep" disabled>Resting</button></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 07 · FRAGMENTS -->
+    <section class="section" id="fragments">
+      <div class="ds-section-label"><span class="num">07</span><h2 class="t-headline">Fragments</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Our "cards" — partial pieces of memory, edges dissolved. We reject the boxed card; a fragment is a state, framed by space not borders. <span class="t-faint">(Images are tonal placeholders here.)</span></p>
+      <div class="specimen-grid" style="margin-top: var(--space-7)" data-surface-group>
+        <article class="fragment" data-surface>
+          <div class="fragment__image" style="background: radial-gradient(120% 90% at 30% 20%, var(--ember-amber), var(--ink-900))"></div>
+          <h3 class="fragment__state">The last warm day before the cold decides to stay.</h3>
+          <p class="fragment__note">Waking · No. 1</p>
+        </article>
+        <article class="fragment" data-surface>
+          <div class="fragment__image" style="background: radial-gradient(120% 90% at 70% 30%, var(--ember-dusk), var(--ink-900))"></div>
+          <h3 class="fragment__state">The room after everyone has left the party.</h3>
+          <p class="fragment__note">Residue · No. 3</p>
+        </article>
+        <article class="fragment fragment--free" data-surface>
+          <div class="fragment__image" style="background: radial-gradient(120% 90% at 50% 40%, var(--ember-rose), var(--ink-900))"></div>
+          <h3 class="fragment__state">Reading a letter from someone now gone.</h3>
+          <p class="fragment__note">free · edges dissolved</p>
+        </article>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 08 · FORMS -->
+    <section class="section" id="forms">
+      <div class="ds-section-label"><span class="num">08</span><h2 class="t-headline">Forms</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Quiet and spacious. One field in focus. A whispered label; errors muted and kind.</p>
+      <form class="subscribe" style="margin-top: var(--space-7)" data-surface onsubmit="return false">
+        <div class="field-group">
+          <label class="field-label" for="email">Stay close</label>
+          <input class="field-input" id="email" type="email" placeholder="your address" />
+        </div>
+        <button class="btn btn--onward" type="submit">Let us write to you <span class="btn__mark">→</span></button>
+      </form>
+      <div class="field-group" style="max-width: var(--measure-narrow); margin-top: var(--space-6)" data-surface>
+        <label class="field-label" for="err">With a gentle error</label>
+        <input class="field-input" id="err" value="not-an-address" aria-invalid="true" />
+        <span class="field-error">That address doesn't seem right — try again.</span>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 09 · MOTION -->
+    <section class="section" id="motion">
+      <div class="ds-section-label"><span class="num">09</span><h2 class="t-headline">Motion</h2></div>
+      <p class="prose t-body-lg t-quiet" data-surface>Breathing, not animation. Everything you've scrolled past has surfaced, not loaded. Below: ambient life at rest.</p>
+      <div class="specimen-grid" style="margin-top: var(--space-7)">
+        <div class="demo-box" data-surface><span class="t-caption">anim-drift</span><span class="t-display t-memory anim-drift glow-word">·</span></div>
+        <div class="demo-box" data-surface><span class="t-caption">anim-breathe</span><span class="t-subhead t-memory t-italic anim-breathe">held breath</span></div>
+        <div class="demo-box" data-surface><span class="t-caption">anim-assemble (reload to see)</span><span class="t-display t-memory anim-assemble">Static</span></div>
+      </div>
+      <p class="t-caption t-faint" style="margin-top: var(--space-5)">All motion honors <code>prefers-reduced-motion</code>. A still Sensorium is still Sensorium.</p>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 10 · COMPONENTS -->
+    <section class="section" id="components">
+      <div class="ds-section-label"><span class="num">10</span><h2 class="t-headline">Components</h2></div>
+      <div class="specimen-grid" style="margin-top: var(--space-5)">
+        <div class="demo-box" data-surface>
+          <span class="t-caption">keepsake · the one commerce tile</span>
+          <div class="keepsake" style="width: 100%">
+            <div class="keepsake__object" style="aspect-ratio:3/4; background: linear-gradient(var(--ink-500), var(--ink-900)); border-radius: var(--radius-sm)"></div>
+            <p class="keepsake__name">Undertow</p>
+            <p class="keepsake__price">50ml · 165</p>
+            <button class="btn btn--keep" style="justify-self:center">Take it with you</button>
+          </div>
+        </div>
+        <div class="demo-box" data-surface>
+          <span class="t-caption">composition · honest, secondary</span>
+          <dl class="composition" style="width:100%">
+            <dt>Opens</dt><dd>cold air, wet stone</dd>
+            <dt>Becomes</dt><dd>cedar, distant smoke</dd>
+            <dt>Stays</dt><dd>skin, amber, the dark</dd>
+          </dl>
+        </div>
+        <div class="demo-box" data-surface>
+          <span class="t-caption">tags &amp; divider</span>
+          <div class="flow-tight" style="text-align:center">
+            <span class="tag">Waking</span> <span class="tag">Eau de Parfum</span>
+            <hr class="divider divider--short" style="margin: var(--space-4) auto" />
+            <span class="t-label">a hairline of silence</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <footer class="section center" data-surface>
+      <p class="t-subhead">The interface should feel like remembering, not browsing.</p>
+      <p class="t-caption t-faint" style="margin-top: var(--space-5)">Sensorium Design System · see <code>/design-system/README.md</code> and <code>/docs</code></p>
+    </footer>
+  </main>
+
+  <!-- Sound: always opt-in -->
+  <button class="sound-toggle" data-sound-toggle aria-pressed="false">
+    <span class="sound-toggle__wave" aria-hidden="true"><i></i><i></i><i></i></span>
+    Sound
+  </button>
+
+  <script src="./js/sensorium.js"></script>
+</body>
+</html>

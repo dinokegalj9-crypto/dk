@@ -1,0 +1,15 @@
+/* =====================================================================
+   SENSORIUM — DESIGN SYSTEM
+   Single entry point. Import this and the whole world comes with it.
+
+       <link rel="stylesheet" href="/design-system/css/sensorium.css">
+
+   Order matters: tokens first (the atoms), then base (the ground),
+   then animations, utilities, and finally components.
+   ===================================================================== */
+
+@import "./tokens.css";
+@import "./base.css";
+@import "./animations.css";
+@import "./utilities.css";
+@import "./components.css";

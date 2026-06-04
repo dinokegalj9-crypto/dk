@@ -1,0 +1,87 @@
+/* =====================================================================
+   SENSORIUM — ANIMATIONS
+   Keyframes are breathing, not flair. Long, soft, decelerating.
+   Nothing bounces. The world is alive even at rest.
+   (Spec: /docs/04-motion-guidelines.md)
+   ===================================================================== */
+
+/* Surface — fade and rise into being (the canonical reveal) */
+@keyframes surface {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Dissolve — recede and fade (exits) */
+@keyframes dissolve {
+  from { opacity: 1; }
+  to   { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Drift — imperceptible ambient float for resting focal elements */
+@keyframes drift {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-8px) scale(1.004); }
+}
+
+/* Breathe — a faint scale/opacity pulse, like slow breath */
+@keyframes breathe {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+
+/* Glow pulse — a candle's slow waver (very subtle) */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.12; }
+  50%      { opacity: 0.22; }
+}
+
+/* Grain drift — keeps the film texture alive */
+@keyframes grain-drift {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-4%, 3%); }
+  40%  { transform: translate(3%, -5%); }
+  60%  { transform: translate(-2%, 4%); }
+  80%  { transform: translate(4%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Fragment assemble — a memory coming together from pieces */
+@keyframes fragment-assemble {
+  from { opacity: 0; filter: blur(var(--blur-fragment)); transform: scale(1.03); }
+  to   { opacity: 1; filter: blur(0); transform: none; }
+}
+
+/* Draw line — an underline waking on approach */
+@keyframes draw-line {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* The slow deepening between scenes — close your eyes between memories */
+@keyframes deepen {
+  0%   { opacity: 0; }
+  50%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---- Animation utility classes ---- */
+.anim-surface  { animation: surface var(--breath-slow) var(--ease-out) both; }
+.anim-assemble { animation: fragment-assemble var(--breath-deep) var(--ease-surface) both; }
+.anim-drift    { animation: drift 9s var(--ease-surface) infinite; }
+.anim-breathe  { animation: breathe 6s ease-in-out infinite; }
+
+/* ---- The contract: a still Sensorium is still Sensorium ----
+   Honor reduced motion everywhere. Movement becomes a dignified
+   cross-fade at most; the emotion survives without motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js [data-surface] { opacity: 1 !important; transform: none !important; }
+  body::after { animation: none !important; }  /* still grain */
+}

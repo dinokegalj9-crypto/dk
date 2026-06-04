@@ -1,0 +1,141 @@
+/* =====================================================================
+   SENSORIUM — UTILITIES
+   Layout frames, type classes, the reveal/surface system, and the
+   "fragment" texture motif. Composable, low-specificity helpers.
+   ===================================================================== */
+
+/* ---- Layout frames ---------------------------------------------------
+   The frame is part of the image. Content rarely touches the edges. */
+.field { width: 100%; }                              /* full-bleed */
+
+.frame {
+  width: 100%;
+  max-width: var(--frame);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.frame--narrow { max-width: calc(var(--frame-narrow) + var(--gutter) * 2); }
+.frame--wide   { max-width: var(--frame-wide); }
+
+/* Asymmetry over the centered grid — memory is off-balance */
+.offset-left  { margin-right: auto; margin-left: 0; }
+.offset-right { margin-left: auto; margin-right: 0; }
+
+/* Vertical rhythm */
+.section { padding-block: var(--rhythm-section); }
+.section--deep { padding-block: var(--space-12); }
+
+/* A simple, breathing flow — owl selector, space between children */
+.flow > * + * { margin-top: var(--space-5); }
+.flow-loose > * + * { margin-top: var(--space-7); }
+.flow-tight > * + * { margin-top: var(--space-3); }
+
+/* Reading column */
+.prose { max-width: var(--measure); }
+.prose--narrow { max-width: var(--measure-narrow); }
+.prose p + p { margin-top: var(--space-5); }
+
+/* Centered, ceremonial moments only */
+.center { text-align: center; margin-inline: auto; }
+
+/* Quiet single-source stacking */
+.stack { display: grid; }
+.stack > * { grid-area: 1 / 1; }
+
+/* ---- Type classes ----------------------------------------------------
+   The memory voice (serif) and the quiet voice (sans). */
+.t-display-xl { font-family: var(--font-memory); font-size: var(--type-display-xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+.t-display    { font-family: var(--font-memory); font-size: var(--type-display);    line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+.t-headline   { font-family: var(--font-memory); font-size: var(--type-headline);   line-height: var(--leading-snug); }
+.t-subhead    { font-family: var(--font-memory); font-size: var(--type-subhead);    line-height: var(--leading-snug); font-style: italic; color: var(--text-quiet); }
+.t-body-lg    { font-size: var(--type-body-lg); line-height: var(--leading-loose); }
+.t-body       { font-size: var(--type-body); line-height: var(--leading-body); }
+.t-caption    { font-size: var(--type-caption); line-height: var(--leading-snug); color: var(--text-quiet); }
+
+/* The small, sparingly-used utility label */
+.t-label {
+  font-family: var(--font-quiet);
+  font-size: var(--type-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+  font-weight: var(--weight-medium);
+}
+
+.t-quiet { color: var(--text-quiet); }
+.t-faint { color: var(--text-faint); }
+.t-memory { font-family: var(--font-memory); }
+.t-italic { font-style: italic; }
+
+/* The one warm word — candlelight on a single word, rarely */
+.glow-word {
+  color: var(--bone-100);
+  text-shadow: var(--halo-accent);
+}
+.accent-word { color: var(--accent); }
+
+/* ---- The surface system ---------------------------------------------
+   Things surface; they do not load. Add [data-surface] and the
+   IntersectionObserver in sensorium.js reveals it. Works without JS
+   (content is visible by default if .js absent). */
+.js [data-surface] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--breath-slow) var(--ease-out),
+    transform var(--breath-slow) var(--ease-out);
+  transition-delay: var(--surface-delay, 0ms);
+  will-change: opacity, transform;
+}
+.js [data-surface].is-surfaced {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger helpers — a memory assembling itself */
+[data-stagger="1"] { --surface-delay: calc(var(--stagger) * 1); }
+[data-stagger="2"] { --surface-delay: calc(var(--stagger) * 2); }
+[data-stagger="3"] { --surface-delay: calc(var(--stagger) * 3); }
+[data-stagger="4"] { --surface-delay: calc(var(--stagger) * 4); }
+[data-stagger="5"] { --surface-delay: calc(var(--stagger) * 5); }
+
+/* ---- Fragment texture -----------------------------------------------
+   Memory is partial. Edges dissolve; the mind completes the rest. */
+.fade-edges {
+  -webkit-mask-image: radial-gradient(115% 115% at 50% 45%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(115% 115% at 50% 45%, #000 55%, transparent 100%);
+}
+.fade-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+.fade-edges-soft {
+  -webkit-mask-image: radial-gradient(130% 130% at 50% 50%, #000 35%, transparent 92%);
+          mask-image: radial-gradient(130% 130% at 50% 50%, #000 35%, transparent 92%);
+}
+
+/* A glow source placed behind a focal element */
+.has-glow { position: relative; }
+.has-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--accent), transparent 70%);
+  opacity: 0.16;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* Hairline divider */
+.divider {
+  border: 0;
+  height: 1px;
+  background: var(--line);
+  width: 100%;
+}
+.divider--short { width: var(--space-7); }
+
+/* Visibility helpers */
+.hide { display: none !important; }
+@media (max-width: 48rem) { .hide-sm { display: none !important; } }

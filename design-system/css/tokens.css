@@ -1,0 +1,201 @@
+/* =====================================================================
+   SENSORIUM — DESIGN TOKENS
+   The atoms of the system. Every value here traces back to the
+   constitution in /docs. Nothing in components uses a raw value;
+   everything references a token, so the whole world can shift at once.
+
+   Throughline: restraint is the luxury. Few values, enormous care.
+   ===================================================================== */
+
+:root {
+  /* -----------------------------------------------------------------
+     1. COLOR — low-light and tonal, drawn from memory and dusk.
+        Memory is not brightly lit. No pure black, no pure white.
+     ----------------------------------------------------------------- */
+
+  /* Ink — the warm near-black void we surface from */
+  --ink-900: #060504;   /* deepest — the dark between memories */
+  --ink-800: #0B0A09;   /* base ground */
+  --ink-700: #121110;   /* a half-step raised */
+  --ink-600: #1A1714;   /* raised surface */
+  --ink-500: #241F1A;   /* the most lifted dark */
+
+  /* Bone — warm off-white, never pure #FFF. The light of recollection */
+  --bone-100: #FBF7F0;
+  --bone-200: #EDE7DD;  /* primary text on dark */
+  --bone-300: #D7CFC2;
+
+  /* Ash — muted grey-taupe, the voice that recedes */
+  --ash-300: #A8A095;
+  --ash-400: #8C857B;   /* secondary text */
+  --ash-500: #6B655C;
+  --ash-600: #4A463F;   /* faintest legible */
+
+  /* Ember — one warm accent per collection, used as LIGHT not fill.
+     Swap --accent per collection to re-tune the whole world. */
+  --ember-amber: #C9824E;  /* the last warm afternoon (default) */
+  --ember-rose:  #B66E6C;  /* after you left */
+  --ember-dusk:  #5E7588;  /* submerged / cold blue dusk */
+  --ember-gold:  #C7A352;  /* the long afternoon */
+
+  /* Veils — translucent layers that build depth from light */
+  --veil-bone-04: rgba(237, 231, 221, 0.04);
+  --veil-bone-06: rgba(237, 231, 221, 0.06);
+  --veil-bone-10: rgba(237, 231, 221, 0.10);
+  --veil-bone-16: rgba(237, 231, 221, 0.16);
+  --veil-ink-40:  rgba(6, 5, 4, 0.40);
+  --veil-ink-70:  rgba(6, 5, 4, 0.70);
+  --veil-ink-92:  rgba(6, 5, 4, 0.92);
+
+  /* Semantic — components speak in these, never in raw palette names */
+  --ground:        var(--ink-800);
+  --ground-deep:   var(--ink-900);
+  --ground-raised: var(--ink-600);
+  --text:          var(--bone-200);
+  --text-quiet:    var(--ash-400);
+  --text-faint:    var(--ash-500);
+  --line:          var(--veil-bone-16);  /* hairlines */
+  --line-faint:    var(--veil-bone-06);
+  --accent:        var(--ember-amber);   /* the candle in the dark room */
+
+  /* Feedback — muted and kind, never traffic-light loud */
+  --signal-error: #B86A63;
+  --signal-ok:    #7E8C6F;
+
+  /* -----------------------------------------------------------------
+     2. TYPOGRAPHY — two voices in tension.
+        Serif = the memory voice. Sans = the quiet voice.
+        (Full spec: /docs/05-typography-guidelines.md)
+     ----------------------------------------------------------------- */
+  --font-memory: "EB Garamond", "Hoefler Text", Garamond, "Times New Roman", serif;
+  --font-quiet:  "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  /* Fluid modular scale (~perfect fourth). Cinematic jumps. */
+  --type-display-xl: clamp(4rem, 2rem + 9vw, 9rem);       /* the threshold word */
+  --type-display:    clamp(2.75rem, 1.6rem + 5vw, 5rem);  /* fragrance names */
+  --type-headline:   clamp(2rem, 1.4rem + 2.6vw, 3rem);
+  --type-subhead:    clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+  --type-body-lg:    clamp(1.18rem, 1.05rem + 0.5vw, 1.375rem);
+  --type-body:       clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
+  --type-caption:    0.8125rem;
+
+  /* Line heights — display holds together as shapes; body breathes */
+  --leading-tight: 1.05;
+  --leading-snug:  1.18;
+  --leading-body:  1.65;
+  --leading-loose: 1.8;
+
+  /* Tracking — utility labels get air; display sits tight to neutral */
+  --tracking-display: -0.01em;
+  --tracking-normal:  0;
+  --tracking-label:   0.12em;   /* small all-caps, used sparingly */
+
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+
+  --measure:        66ch;  /* reading line length 60–75ch */
+  --measure-narrow: 44ch;
+
+  /* -----------------------------------------------------------------
+     3. SPACING — the breath. A modular scale; generous by default.
+        Space is the loudest element. When in doubt, more.
+     ----------------------------------------------------------------- */
+  --space-1:  0.25rem;   /*  4 */
+  --space-2:  0.5rem;    /*  8 */
+  --space-3:  0.75rem;   /* 12 */
+  --space-4:  1rem;      /* 16 */
+  --space-5:  1.5rem;    /* 24 */
+  --space-6:  2rem;      /* 32 */
+  --space-7:  3rem;      /* 48 */
+  --space-8:  4rem;      /* 64 */
+  --space-9:  6rem;      /* 96 */
+  --space-10: 8rem;      /* 128 */
+  --space-11: 12rem;     /* 192 */
+  --space-12: 18rem;     /* 288 — silence between major moments */
+
+  /* Semantic aliases */
+  --space-breath:  var(--space-7);   /* between related elements */
+  --space-pause:   var(--space-9);   /* between sections */
+  --space-silence: var(--space-12);  /* between major scenes */
+
+  /* Fluid section rhythm */
+  --rhythm-section: clamp(var(--space-9), 6rem + 6vw, var(--space-12));
+
+  /* -----------------------------------------------------------------
+     4. LIGHT & DEPTH — our "shadows".
+        A dark brand earns depth through LIGHT and GLOW, not drop
+        shadows. (Docs forbid boxy drop shadows.)
+     ----------------------------------------------------------------- */
+  --glow-accent-sm: 0 0 24px -6px var(--accent);
+  --glow-accent-md: 0 0 60px -10px var(--accent);
+  --glow-accent-lg: 0 0 140px -20px var(--accent);
+
+  /* Halo — candlelight on a single word */
+  --halo-word: 0 0 28px var(--veil-bone-16);
+  --halo-accent: 0 0 0.04em rgba(201, 130, 78, 0.5), 0 0 32px -8px var(--accent);
+
+  /* Vignette — looking INTO a space, not at a screen */
+  --vignette: inset 0 0 220px 40px var(--veil-ink-70);
+  --vignette-soft: inset 0 0 160px 20px var(--veil-ink-40);
+
+  /* The rare soft ambient shadow — only for found objects (packaging) */
+  --shadow-soft: 0 30px 80px -40px rgba(0, 0, 0, 0.8);
+  --shadow-deep: 0 60px 160px -60px rgba(0, 0, 0, 0.9);
+
+  /* -----------------------------------------------------------------
+     5. RADIUS — archetypal, near-sharp. No "app" roundness.
+     ----------------------------------------------------------------- */
+  --radius-none: 0;
+  --radius-sm:   2px;
+  --radius-soft: 6px;
+  --radius-pill: 999px;  /* used almost never */
+
+  /* -----------------------------------------------------------------
+     6. EDGE & GRAIN — the analog/memory texture
+     ----------------------------------------------------------------- */
+  --grain-opacity: 0.045;
+  --blur-fragment: 14px;   /* dissolved edges of a memory */
+  --blur-veil: 24px;       /* frosted-glass surfaces */
+
+  /* -----------------------------------------------------------------
+     7. MOTION — breathing, not animation.
+        (Full spec: /docs/04-motion-guidelines.md)
+     ----------------------------------------------------------------- */
+  --breath-quick: 320ms;
+  --breath:       600ms;
+  --breath-slow:  1200ms;
+  --breath-deep:  2400ms;
+  --breath-ambient: 18s;   /* imperceptible loops */
+
+  /* Easing — soft decelerating arrival. We never bounce. */
+  --ease-surface: cubic-bezier(0.22, 1, 0.36, 1);  /* default */
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);   /* entrances settle */
+  --ease-in:      cubic-bezier(0.7, 0, 0.84, 0);   /* exits recede */
+
+  --stagger: 90ms;  /* offset between surfacing siblings */
+
+  /* -----------------------------------------------------------------
+     8. LAYOUT — the frame is part of the image.
+     ----------------------------------------------------------------- */
+  --frame:        72rem;   /* max content width */
+  --frame-narrow: 40rem;   /* intimate reading column */
+  --frame-wide:   90rem;
+  --gutter: clamp(var(--space-5), 4vw, var(--space-9));
+
+  /* -----------------------------------------------------------------
+     9. Z-INDEX — a small, named ladder
+     ----------------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-nav: 100;
+  --z-veil: 500;
+  --z-summon: 900;   /* summoned menu */
+  --z-grain: 1000;   /* grain overlay sits above all */
+}
+
+/* Per-collection accent retuning — add a class to <html> or a section.
+   The single accent re-tints glow, halo, focus, and the one warm word. */
+[data-collection="after-you-left"] { --accent: var(--ember-rose); }
+[data-collection="submerged"]      { --accent: var(--ember-dusk); }
+[data-collection="long-afternoon"] { --accent: var(--ember-gold); }
