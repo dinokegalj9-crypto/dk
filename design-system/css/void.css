@@ -1,0 +1,75 @@
+/* =====================================================================
+   SENSORIUM — THE VOID
+   The persistent background environment behind the entire site.
+   Eigengrau — the warm dark behind closed eyes. Everything surfaces
+   out of it. Psychologically familiar; impossible to identify.
+
+   Optional module (not bundled in sensorium.css). Drop in:
+     <div class="void" data-void aria-hidden="true"></div>
+     <link rel="stylesheet" href="/design-system/css/void.css">
+     <script src="/design-system/js/void.js"></script>
+   Page content must sit above it (e.g. a wrapper with .void-above).
+   ===================================================================== */
+
+.void {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* Eigengrau — no horizon, no floor, no scale. A warm dark volume. */
+  background:
+    radial-gradient(120% 85% at 50% 14%, var(--ink-700), transparent 58%),
+    radial-gradient(130% 120% at 50% 126%, var(--ink-900), transparent 55%),
+    var(--ink-800);
+  /* the base itself breathes — imperceptible luminance */
+  animation: void-breathe 26s ease-in-out infinite;
+}
+
+/* The living light + motes live on the canvas (drawn by void.js) */
+.void__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The edges deepen — the Void is darkest where you aren't looking.
+   (If the design system base.css is present, its vignette layers over
+   the top; this one keeps the Void self-sufficient when used alone.) */
+.void::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: var(--vignette, inset 0 0 220px 40px rgba(6, 5, 4, 0.7));
+  pointer-events: none;
+}
+
+@keyframes void-breathe {
+  0%, 100% { filter: brightness(1) saturate(1); }
+  50%      { filter: brightness(1.07) saturate(1.04); }
+}
+
+/* Content sits in the Void, not on a page on top of it */
+.void-above { position: relative; z-index: 1; }
+
+/* Text protection: a near-invisible local hush so copy never fights the
+   Void. Apply to dense text blocks if a bloom ever drifts too bright. */
+.void-hush {
+  position: relative;
+  isolation: isolate;
+}
+.void-hush::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--space-6) * -1);
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--veil-ink-40), transparent 78%);
+  pointer-events: none;
+}
+
+/* A still Void is still the Void. */
+@media (prefers-reduced-motion: reduce) {
+  .void { animation: none; }
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="default">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sensorium — The Void</title>
+  <meta name="description" content="The warm dark behind closed eyes. Everything surfaces out of it." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../../design-system/css/sensorium.css" />
+  <link rel="stylesheet" href="../../design-system/css/void.css" />
+
+  <style>
+    /* demo-only: the collection retint control */
+    .void-control {
+      position: fixed; left: var(--space-5); bottom: var(--space-5);
+      z-index: var(--z-nav); display: flex; gap: var(--space-4);
+      align-items: center;
+    }
+    .void-control button {
+      width: 16px; height: 16px; border-radius: var(--radius-pill);
+      border: 1px solid var(--line); opacity: 0.5;
+      transition: opacity var(--breath-quick) var(--ease-surface), box-shadow var(--breath-quick);
+    }
+    .void-control button:hover, .void-control button[aria-pressed="true"] { opacity: 1; box-shadow: var(--glow-accent-sm); }
+  </style>
+</head>
+
+<body>
+  <!-- THE VOID — behind everything -->
+  <div class="void" data-void aria-hidden="true"></div>
+
+  <!-- Everything else floats inside it -->
+  <div class="void-above">
+    <nav class="veil-nav" aria-label="Primary">
+      <a class="veil-nav__mark" href="#top">Sensorium</a>
+    </nav>
+
+    <header class="threshold field" id="top">
+      <div class="frame void-hush">
+        <p class="t-label" data-surface>The Void</p>
+        <h1 class="threshold__word glow-word" data-surface data-stagger="1">Eigengrau</h1>
+        <p class="threshold__line" data-surface data-stagger="2">
+          The warm dark behind closed eyes. You know it. You can't name it.
+        </p>
+      </div>
+    </header>
+
+    <main class="frame flow-loose" style="padding-block: var(--space-12)">
+      <section class="section prose void-hush" data-surface>
+        <h2 class="t-headline">It is everywhere and nowhere.</h2>
+        <p class="t-body-lg t-quiet" style="margin-top: var(--space-5)">
+          Move your cursor — the medium parts around it, like a hand through dust, or water,
+          or the dark itself. Hold still, and the dark gathers; the light slows. The motes are
+          not stars, not snow, not anything you could point to. That is the point.
+        </p>
+      </section>
+
+      <section class="section prose void-hush" data-surface>
+        <h2 class="t-headline">Scroll, and it stays beneath you.</h2>
+        <p class="t-body-lg t-quiet" style="margin-top: var(--space-5)">
+          The Void drifts slower than this text, so the words feel suspended <em>in</em> it
+          rather than printed on a page above it. There is no horizon, no floor, no sense of
+          scale — so the mind cannot decide whether you are looking up, or down, or inward.
+        </p>
+        <p class="t-body" style="margin-top: var(--space-5)">
+          Text remains legible because the Void always recedes. Light blooms are rare and faint;
+          the base never brightens past the dark. This paragraph sits at full contrast against it.
+        </p>
+      </section>
+
+      <section class="section center void-hush" data-surface>
+        <p class="t-subhead">Change the light, change the memory.</p>
+        <p class="t-caption t-faint" style="margin-top: var(--space-4)">
+          Below: retint the Void per collection — one accent at a time.
+        </p>
+      </section>
+
+      <section class="section" style="min-height: 60vh"></section>
+
+      <footer class="section center void-hush" data-surface>
+        <p class="t-subhead">The interface should feel like remembering, not browsing.</p>
+        <p class="t-caption t-faint" style="margin-top: var(--space-5)">
+          The Void · <code>/design-system/css/void.css</code> + <code>/design-system/js/void.js</code>
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- demo retint control -->
+  <div class="void-control" role="group" aria-label="Collection light">
+    <button data-c="default" aria-pressed="true" title="amber — the last warm afternoon" style="background:#C9824E"></button>
+    <button data-c="after-you-left" aria-pressed="false" title="rose — after you left" style="background:#B66E6C"></button>
+    <button data-c="submerged" aria-pressed="false" title="dusk — submerged" style="background:#5E7588"></button>
+    <button data-c="long-afternoon" aria-pressed="false" title="gold — the long afternoon" style="background:#C7A352"></button>
+  </div>
+
+  <button class="sound-toggle" data-sound-toggle aria-pressed="false">
+    <span class="sound-toggle__wave" aria-hidden="true"><i></i><i></i><i></i></span>
+    Sound
+  </button>
+
+  <script src="../../design-system/js/sensorium.js"></script>
+  <script src="../../design-system/js/void.js"></script>
+  <script>
+    // demo: retint the Void + the whole page accent per collection
+    document.querySelectorAll(".void-control button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var c = btn.getAttribute("data-c");
+        document.documentElement.setAttribute("data-collection", c === "default" ? "" : c);
+        if (window.SensoriumVoid) { window.SensoriumVoid.deepen(); window.SensoriumVoid.setCollection(c === "default" ? "" : c); }
+        document.querySelectorAll(".void-control button").forEach(function (b) {
+          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        });
+      });
+    });
+  </script>
+</body>
+</html>

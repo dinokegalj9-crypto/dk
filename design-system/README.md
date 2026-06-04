@@ -33,9 +33,27 @@ design-system/
 │   ├── animations.css     ← keyframes + reduced-motion contract
 │   ├── utilities.css      ← frames, type classes, the surface system, fragments
 │   └── components.css     ← buttons, fragments, forms, nav, keepsake, sound…
+├── css/
+│   └── void.css           ← (optional) The Void — the site-wide background environment
 └── js/
-    └── sensorium.js       ← surfacing, summoned menu, sound toggle, cursor glow
+    ├── sensorium.js       ← surfacing, summoned menu, sound toggle, cursor glow
+    └── void.js            ← (optional) The Void — eigengrau motes + sourceless light
 ```
+
+### Optional module — The Void
+
+The persistent background environment behind the whole site (eigengrau: the warm dark behind
+closed eyes). Not bundled in `sensorium.css` because it is heavier and page-optional.
+
+```html
+<link rel="stylesheet" href="/design-system/css/void.css">
+<div class="void" data-void aria-hidden="true"></div>
+<div class="void-above"> …page content… </div>
+<script src="/design-system/js/void.js"></script>
+```
+
+API: `SensoriumVoid.setCollection(name)`, `.deepen()`, `.pause()`, `.resume()`.
+See the demo in [`prototypes/void/`](../prototypes/void/).
 
 ## The nine pillars (and where each lives)
 
