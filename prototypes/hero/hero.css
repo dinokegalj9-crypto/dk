@@ -1,0 +1,200 @@
+/* =====================================================================
+   SENSORIUM — HERO: "THE SURFACING"
+   The threshold as a memory developing in real time. Built on the
+   design system tokens. Everything degrades to a dignified still.
+   ===================================================================== */
+
+.threshold-stage { position: relative; }
+
+.threshold-hero {
+  /* live, JS-driven values */
+  --mx: 50%;            /* pointer x — the lamp */
+  --my: 45%;            /* pointer y */
+  --light-x: 70%;       /* off-center memory light */
+  --light-y: 36%;
+  --develop: 0;         /* 0 → 1 development progress (informational) */
+
+  position: relative;
+  height: 100vh;        /* fallback */
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  background: radial-gradient(140% 110% at 50% 120%, var(--ink-900), var(--ink-800) 60%);
+}
+
+/* ---- Layer: the memory (fogged, peripheral light) ------------------ */
+.hero__memory,
+.hero__clarity {
+  position: absolute;
+  inset: -6%;
+  z-index: 1;
+  background:
+    /* the warm bloom — scent as light, off-center */
+    radial-gradient(46% 62% at var(--light-x) var(--light-y),
+      rgba(201, 130, 78, 0.55), rgba(183, 110, 108, 0.18) 38%, transparent 72%),
+    /* a cooler depth opposite it */
+    radial-gradient(60% 80% at 18% 88%, rgba(94, 117, 136, 0.20), transparent 60%),
+    /* faint curtain-light slats */
+    repeating-linear-gradient(94deg,
+      transparent 0 26px, rgba(237, 231, 221, 0.018) 26px 28px);
+  background-blend-mode: screen, screen, overlay;
+}
+
+/* the fogged base — always faintly present */
+.hero__memory {
+  filter: blur(26px) saturate(0.7) brightness(0.72);
+  opacity: 0;
+  transition: opacity var(--breath-deep) var(--ease-out);
+}
+
+/* the clarity copy — sharper, brighter, revealed only at the lamp */
+.hero__clarity {
+  filter: blur(6px) saturate(1.05) brightness(1.02);
+  opacity: 0;
+  transition: opacity var(--breath-deep) var(--ease-out) 200ms,
+              filter var(--breath-slow) var(--ease-surface);
+  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my),
+      #000 0, #000 11vmax, transparent 34vmax);
+          mask-image: radial-gradient(circle at var(--mx) var(--my),
+      #000 0, #000 11vmax, transparent 34vmax);
+}
+
+/* heat-haze shimmer — desktop / motion only (toggled by JS) */
+.threshold-hero.has-haze .hero__clarity { filter: blur(6px) saturate(1.05) url(#hero-haze); }
+
+/* the slip — when the visitor goes still, the memory recedes */
+.threshold-hero.is-slipping .hero__clarity { opacity: 0.32; filter: blur(16px) saturate(0.6) brightness(0.7); }
+.threshold-hero.is-slipping .hero__line { opacity: 0.35; }
+
+/* ---- Layer: developing grain (denser, fades as it develops) -------- */
+.hero__grain {
+  position: absolute; inset: 0; z-index: 2;
+  pointer-events: none;
+  opacity: 0.9;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  transition: opacity var(--breath-deep) var(--ease-out);
+}
+
+/* ---- Layer: the shroud (development intro, dissolves) -------------- */
+.hero__shroud {
+  position: absolute; inset: 0; z-index: 5;
+  background: var(--ink-900);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity var(--breath-deep) var(--ease-out);
+}
+
+/* ---- Content ------------------------------------------------------- */
+.hero__inner {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  gap: var(--space-6);
+  padding-inline: var(--gutter);
+  width: 100%;
+  max-width: var(--frame);
+  /* off-axis, set low — a thought surfacing, not a banner */
+  justify-items: start;
+  align-content: center;
+  margin-top: 8vh;
+}
+
+.hero__eyebrow { color: var(--text-faint); }
+
+.hero__word {
+  font-family: var(--font-memory);
+  font-size: var(--type-display-xl);
+  line-height: 0.98;
+  letter-spacing: var(--tracking-display);
+  color: var(--bone-100);
+  text-shadow: var(--halo-accent);
+  max-width: 16ch;
+}
+.hero__word span {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  transform: translate(var(--lx, 0), var(--ly, 0)) rotate(var(--lr, 0deg));
+  filter: blur(12px);
+  transition:
+    opacity var(--breath-slow) var(--ease-out),
+    transform var(--breath-deep) var(--ease-surface),
+    filter var(--breath-slow) var(--ease-out);
+  transition-delay: var(--ld, 0ms);
+}
+.threshold-hero.is-developed .hero__word span {
+  opacity: 1; transform: none; filter: none;
+}
+
+.hero__line {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--type-subhead);
+  color: var(--text-quiet);
+  max-width: 34ch;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--breath-slow) var(--ease-out) 900ms,
+              transform var(--breath-slow) var(--ease-out) 900ms;
+}
+.threshold-hero.is-developed .hero__line { opacity: 1; transform: none; }
+
+/* ---- Descend cue --------------------------------------------------- */
+.hero__descend {
+  position: absolute;
+  z-index: 4;
+  bottom: var(--space-7);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity var(--breath-slow) var(--ease-out) 1500ms, color var(--breath-quick);
+}
+.threshold-hero.is-developed .hero__descend { opacity: 1; }
+.hero__descend:hover { color: var(--text-quiet); }
+.hero__descend .t-label { font-size: 0.6875rem; }
+.hero__descend__rail {
+  width: 1px; height: var(--space-7);
+  background: linear-gradient(var(--ash-500), transparent);
+  position: relative; overflow: hidden;
+}
+.hero__descend__rail::after {
+  content: ""; position: absolute; left: 0; top: -40%;
+  width: 1px; height: 40%;
+  background: linear-gradient(var(--accent), transparent);
+  animation: descend-fall 2.6s var(--ease-surface) infinite;
+}
+@keyframes descend-fall {
+  0% { transform: translateY(-100%); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(360%); opacity: 0; }
+}
+
+/* ---- Reduced motion: a dignified, resolved still ------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero__memory { opacity: 0.85; filter: blur(20px) saturate(0.8) brightness(0.8); }
+  .hero__clarity { opacity: 0.6; -webkit-mask-image: none; mask-image: none; filter: blur(8px); }
+  .hero__shroud { opacity: 0 !important; }
+  .hero__grain { opacity: 0.4; }
+  .hero__word span { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .hero__line, .hero__descend { opacity: 1 !important; transform: translateX(-50%) !important; }
+  .hero__line { transform: none !important; }
+  .hero__descend__rail::after { animation: none; }
+}
+
+/* ---- The section we submerge into (prototype context) ------------- */
+.drift-next {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: var(--space-6);
+  padding: var(--space-10) var(--gutter);
+}
