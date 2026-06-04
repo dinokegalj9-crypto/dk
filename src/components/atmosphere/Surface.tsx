@@ -6,7 +6,7 @@
    in the vanilla design system). Honors reduced motion via the global
    MotionConfig. (doc 02 / doc 11 §B6)
    ===================================================================== */
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 import { dur, ease } from "@/lib/motion";
 
@@ -30,7 +30,7 @@ interface Props {
 
 export default function Surface({ children, index = 0, className, amount = 0.3 }: Props) {
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={variants}
       custom={index}
@@ -39,6 +39,6 @@ export default function Surface({ children, index = 0, className, amount = 0.3 }
       viewport={{ once: true, amount }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

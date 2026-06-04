@@ -6,11 +6,11 @@
    MotionValue. "Closing your eyes between memories." Works in every
    browser; View Transitions (shared-element morph) layer on top later.
    ===================================================================== */
-import { motion, type MotionValue } from "framer-motion";
+import { m, type MotionValue } from "framer-motion";
 
 export default function DeepenVeil({ deepen }: { deepen: MotionValue<number> }) {
   return (
-    <motion.div
+    <m.div
       aria-hidden
       style={{
         position: "fixed",

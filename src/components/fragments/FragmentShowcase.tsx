@@ -8,15 +8,28 @@ import Fragment from "./Fragment";
 import type { Fragrance } from "@/types/content";
 import styles from "./FragmentShowcase.module.css";
 
-export default function FragmentShowcase({ fragrances }: { fragrances: Fragrance[] }) {
+interface Props {
+  fragrances: Fragrance[];
+  eyebrow?: string;
+  heading?: string;
+  coda?: string;
+  /** Heading element — h2 within a page, h1 when this is the page's lead. */
+  as?: "h1" | "h2";
+}
+
+export default function FragmentShowcase({
+  fragrances,
+  eyebrow = "The Library",
+  heading = "Each is a state. Find the one you've been missing.",
+  coda = "Some things you didn't lose. You just stopped visiting them.",
+  as: Heading = "h2",
+}: Props) {
   return (
     <section id="drift" className={styles.showcase} aria-label="The Library">
       <div className={styles.inner}>
         <Surface>
-          <p className="t-label">The Library</p>
-          <h2 className={styles.heading}>
-            Each is a state. Find the one you&rsquo;ve been missing.
-          </h2>
+          <p className="t-label">{eyebrow}</p>
+          <Heading className={styles.heading}>{heading}</Heading>
         </Surface>
       </div>
 
@@ -29,9 +42,7 @@ export default function FragmentShowcase({ fragrances }: { fragrances: Fragrance
 
         <Surface>
           <div className={styles.coda}>
-            <p className={styles.codaLine}>
-              Some things you didn&rsquo;t lose. You just stopped visiting them.
-            </p>
+            <p className={styles.codaLine}>{coda}</p>
           </div>
         </Surface>
       </div>

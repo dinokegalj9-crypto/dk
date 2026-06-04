@@ -1,0 +1,103 @@
+/* =====================================================================
+   CHROME — hidden until summoned, instantly available. Never a
+   persistent shouting bar. (doc 03 §6, doc 02 §4)
+   ===================================================================== */
+
+/* ---- the veil nav (always present, near-invisible) ----------------- */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(1.25rem, 3vw, 2rem) var(--gutter);
+  mix-blend-mode: difference; /* legible over any ground */
+}
+.mark {
+  font-family: var(--font-memory);
+  font-size: var(--text-subhead);
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.summon {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0.5rem;
+  color: #fff;
+}
+.summon span {
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+  transition: transform var(--breath) var(--ease-surface), opacity var(--breath) var(--ease-surface);
+}
+.summon[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
+.summon[aria-expanded="true"] span:last-child { transform: translateY(-3px) rotate(-45deg); }
+
+/* ---- the summoned menu (an experience, not a dropdown) ------------- */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: grid;
+  place-content: center;
+  gap: 2rem;
+  text-align: center;
+  background: var(--veil-ink-92);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+.menuLink {
+  font-family: var(--font-memory);
+  font-size: var(--text-headline);
+  color: var(--text-quiet);
+  transition: color var(--breath-quick) var(--ease-surface);
+}
+.menuLink:hover { color: var(--color-bone-100); }
+.menuTest {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--text-subhead);
+  color: var(--text-faint);
+  max-width: 26ch;
+  margin: 1rem auto 0;
+}
+
+/* ---- the sound toggle (always opt-in, calm, ever-present) ---------- */
+.sound {
+  position: fixed;
+  right: var(--gutter);
+  bottom: clamp(1.25rem, 3vw, 2rem);
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  transition: color var(--breath-quick) var(--ease-surface);
+}
+.sound:hover { color: var(--text-quiet); }
+.sound[aria-pressed="true"] { color: var(--accent); }
+.wave { display: inline-flex; align-items: center; gap: 2px; }
+.wave i {
+  width: 2px;
+  height: 8px;
+  background: currentColor;
+  display: block;
+  transform-origin: bottom;
+}
+.sound[aria-pressed="true"] .wave i { animation: sound-breathe 1.4s ease-in-out infinite; }
+.sound[aria-pressed="true"] .wave i:nth-child(2) { animation-delay: 0.2s; }
+.sound[aria-pressed="true"] .wave i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes sound-breathe {
+  0%, 100% { transform: scaleY(0.6); opacity: 0.7; }
+  50% { transform: scaleY(1.4); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound[aria-pressed="true"] .wave i { animation: none; }
+}

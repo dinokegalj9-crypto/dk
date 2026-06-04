@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import Providers from "./providers";
 import VoidSystem from "@/components/atmosphere/VoidSystem";
+import Chrome from "@/components/layout/Chrome";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -41,7 +43,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           {/* The Void is mounted once here and persists across every
               navigation — the world is never broken between scenes. */}
-          <VoidSystem>{children}</VoidSystem>
+          <VoidSystem>
+            <Chrome />
+            {children}
+            <Footer />
+          </VoidSystem>
         </Providers>
       </body>
     </html>

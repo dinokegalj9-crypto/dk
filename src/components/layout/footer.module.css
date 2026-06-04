@@ -1,0 +1,90 @@
+/* =====================================================================
+   FOOTER — quiet wayfinding + the stay-close moment. Labeled navigation
+   for clarity and accessibility lives here. (doc 02 §8)
+   ===================================================================== */
+.footer {
+  position: relative;
+  border-top: 1px solid var(--line-faint);
+  margin-top: clamp(6rem, 14vh, 12rem);
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter) 3rem;
+}
+.inner {
+  max-width: 72rem;
+  margin-inline: auto;
+  display: grid;
+  gap: clamp(3rem, 8vh, 5rem);
+}
+.top {
+  display: grid;
+  gap: clamp(3rem, 8vw, 6rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 48rem) {
+  .top { grid-template-columns: 1.2fr 1fr 1.4fr; }
+}
+
+.mark {
+  font-family: var(--font-memory);
+  font-size: var(--text-headline);
+  color: var(--color-bone-100);
+}
+.markLine {
+  font-family: var(--font-memory);
+  font-style: italic;
+  color: var(--text-quiet);
+  max-width: 24ch;
+  margin-top: 1rem;
+}
+
+.colTitle {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 1.25rem;
+}
+.links { display: grid; gap: 0.75rem; }
+.link {
+  color: var(--text-quiet);
+  transition: color var(--breath-quick) var(--ease-surface);
+  width: fit-content;
+}
+.link:hover { color: var(--color-bone-100); }
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line-faint);
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+
+/* stay close */
+.stay { display: grid; gap: 1rem; max-width: 24rem; }
+.stayForm { display: flex; align-items: flex-end; gap: 1rem; }
+.field { flex: 1; display: grid; gap: 0.5rem; }
+.input {
+  width: 100%;
+  padding: 0.5rem 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: 1.0625rem;
+  transition: border-color var(--breath) var(--ease-surface);
+}
+.input::placeholder { color: var(--text-faint); }
+.input:focus { outline: none; border-color: var(--accent); }
+.submit {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--text-quiet);
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  transition: color var(--breath-quick) var(--ease-surface);
+}
+.submit:hover { color: var(--accent); }
+.said { font-style: italic; font-family: var(--font-memory); color: var(--text-quiet); }

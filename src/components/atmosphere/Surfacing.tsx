@@ -12,7 +12,7 @@
      cursor "lamp", ambient light drift, the idle "slip", the submerge).
    ===================================================================== */
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { letter, surface, wordContainer } from "@/lib/motion";
 import { useVoid } from "@/lib/void";
 import styles from "./Surfacing.module.css";
@@ -131,7 +131,7 @@ export default function Surfacing() {
       <div ref={innerRef} className={styles.inner}>
         <p className="t-label">Sensorium</p>
 
-        <motion.h1
+        <m.h1
           className={styles.word}
           variants={wordContainer}
           initial="hidden"
@@ -139,13 +139,13 @@ export default function Surfacing() {
           aria-label={WORD}
         >
           {WORD.split("").map((ch, i) => (
-            <motion.span key={`${ch}-${i}`} variants={letter} aria-hidden>
+            <m.span key={`${ch}-${i}`} variants={letter} aria-hidden>
               {ch}
-            </motion.span>
+            </m.span>
           ))}
-        </motion.h1>
+        </m.h1>
 
-        <motion.p
+        <m.p
           className={styles.line}
           variants={surface}
           custom={0.9}
@@ -153,10 +153,10 @@ export default function Surfacing() {
           animate={developed ? "develop" : "hidden"}
         >
           {LINE}
-        </motion.p>
+        </m.p>
       </div>
 
-      <motion.button
+      <m.button
         type="button"
         className={styles.descend}
         onClick={descend}
@@ -168,7 +168,7 @@ export default function Surfacing() {
       >
         <span className="t-label">go under</span>
         <span className={styles.rail} aria-hidden />
-      </motion.button>
+      </m.button>
 
       <div className={styles.shroud} aria-hidden />
     </section>

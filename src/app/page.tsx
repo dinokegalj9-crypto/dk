@@ -1,5 +1,6 @@
 import Surfacing from "@/components/atmosphere/Surfacing";
 import FragmentShowcase from "@/components/fragments/FragmentShowcase";
+import Philosophy from "@/components/sections/Philosophy";
 import { getFragrances } from "@/lib/content";
 
 export default function Home() {
@@ -11,6 +12,9 @@ export default function Home() {
 
       {/* The Drift: states as fragments, retinting the Void as they pass. */}
       <FragmentShowcase fragrances={fragrances} />
+
+      {/* The House: why Sensorium exists. */}
+      <Philosophy />
     </main>
   );
 }
