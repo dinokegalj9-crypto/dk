@@ -134,6 +134,9 @@ body::after {
   100% { transform: translate(0, 0); }
 }
 
+/* Content sits IN the Void (z:0), above it — never on a page on top */
+.void-content { position: relative; z-index: 1; }
+
 ::selection { background: var(--accent); color: var(--color-ink-900); }
 
 :focus-visible {

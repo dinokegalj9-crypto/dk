@@ -1,42 +1,63 @@
 "use client";
 
 /* =====================================================================
-   THE VOID — canvas environment of sourceless light blooms and
-   ambiguous motes drifting below conscious tracking. Cheap enough to
-   run forever: capped DPR, pauses when hidden, fewer motes on coarse /
-   save-data, near-still under prefers-reduced-motion. (doc: void.js)
+   THE VOID — canvas renderer. Sourceless light blooms and ambiguous
+   motes drifting below conscious tracking. Built to run forever:
+   - capped DPR, pauses when hidden, fewer motes on coarse / save-data
+   - ADAPTIVE QUALITY: samples FPS and sheds motes before the user
+     feels a dropped frame (the Conductor-lite, doc 11 §B4)
+   - reads the shared `deepen` MotionValue each frame (transitions)
+   - re-resolves the accent when the collection changes (retint)
+   - near-still under prefers-reduced-motion
    ===================================================================== */
 import { useEffect, useRef } from "react";
-import styles from "./Void.module.css";
+import type { MotionValue } from "framer-motion";
+import type { VoidQuality } from "@/lib/void";
+import styles from "./VoidCanvas.module.css";
 
 interface Mote {
-  x: number;
-  y: number;
-  z: number;
-  size: number;
-  a: number;
-  vx: number;
-  vy: number;
-  ph: number;
-  fs: number;
-  par: number;
+  x: number; y: number; z: number; size: number; a: number;
+  vx: number; vy: number; ph: number; fs: number; par: number;
 }
-
 interface Bloom {
-  ox: number;
-  oy: number;
-  ax: number;
-  ay: number;
-  sp: number;
-  ph: number;
-  r: number;
-  a: number;
+  ox: number; oy: number; ax: number; ay: number; sp: number; ph: number; r: number; a: number;
 }
 
-export default function Void() {
+type RGB = [number, number, number];
+
+/** Resolve the current --accent (handles var() indirection) without a
+ *  persistent probe — only called on mount and on collection change. */
+function resolveAccent(): RGB {
+  const el = document.createElement("span");
+  el.style.cssText = "position:absolute;left:-9999px;width:0;height:0;color:var(--accent)";
+  document.documentElement.appendChild(el);
+  const m = getComputedStyle(el).color.match(/(\d+),\s*(\d+),\s*(\d+)/);
+  el.remove();
+  return m ? [+m[1], +m[2], +m[3]] : [201, 130, 78];
+}
+
+const QUALITY_SCALE: Record<VoidQuality, number> = { high: 1, medium: 0.66, low: 0.4 };
+
+interface Props {
+  deepen: MotionValue<number>;
+  collection: string;
+  onQuality: (q: VoidQuality) => void;
+}
+
+export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const accentRef = useRef<RGB>([201, 130, 78]);
+  const renderStillRef = useRef<(() => void) | null>(null);
 
+  // ---- collection change → re-resolve accent (retint) ----------------
+  useEffect(() => {
+    accentRef.current = resolveAccent();
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) renderStillRef.current?.();
+  }, [collection]);
+
+  // ---- the renderer (set up once) ------------------------------------
   useEffect(() => {
     const host = hostRef.current;
     const canvas = canvasRef.current;
@@ -49,16 +70,7 @@ export default function Void() {
     const saveData =
       (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ?? false;
 
-    // accent (resolve var() indirection via a probe)
-    const probe = document.createElement("span");
-    probe.style.cssText = "position:absolute;left:-9999px;width:0;height:0";
-    host.appendChild(probe);
-    const accent = (): [number, number, number] => {
-      probe.style.color = "var(--accent)";
-      const m = getComputedStyle(probe).color.match(/(\d+),\s*(\d+),\s*(\d+)/);
-      return m ? [+m[1], +m[2], +m[3]] : [201, 130, 78];
-    };
-    const [ar, ag, ab] = accent();
+    accentRef.current = resolveAccent();
 
     // soft mote sprite
     const sprite = document.createElement("canvas");
@@ -75,13 +87,23 @@ export default function Void() {
     let H = 0;
     let motes: Mote[] = [];
     let blooms: Bloom[] = [];
+    let maxCount = 0;
+
+    // adaptive quality state
+    let quality: VoidQuality = reduce ? "low" : coarse || saveData ? "medium" : "high";
+    let activeCount = 0;
+    let fpsFrames = 0;
+    let fpsElapsed = 0;
+    let goodWindows = 0;
+
+    const setActiveFromQuality = () => {
+      activeCount = Math.max(8, Math.round(maxCount * QUALITY_SCALE[quality]));
+    };
 
     const makeMote = (): Mote => {
       const z = Math.random();
       return {
-        x: Math.random() * W,
-        y: Math.random() * H,
-        z,
+        x: Math.random() * W, y: Math.random() * H, z,
         size: 0.6 + z * z * 7,
         a: 0.1 + (1 - z) * 0.3,
         vx: (Math.random() - 0.5) * 0.12 * (0.4 + z),
@@ -101,10 +123,10 @@ export default function Void() {
       canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      let count = Math.round((W * H) / 26000);
-      if (coarse || saveData) count = Math.round(count * 0.5);
-      count = Math.max(14, Math.min(72, count));
-      motes = Array.from({ length: count }, makeMote);
+      // the high-water mote count; quality scales how many we actually draw
+      maxCount = Math.max(14, Math.min(72, Math.round((W * H) / 26000)));
+      motes = Array.from({ length: maxCount }, makeMote);
+      setActiveFromQuality();
 
       blooms = [
         { ox: 0.7, oy: 0.3, ax: 0.1, ay: 0.07, sp: 0.34, ph: 0, r: 0.62, a: 0.1 },
@@ -113,10 +135,8 @@ export default function Void() {
       ];
     };
 
-    let px = -9999;
-    let py = -9999;
-    let smx = -9999;
-    let smy = -9999;
+    // interaction state
+    let px = -9999, py = -9999, smx = -9999, smy = -9999;
     let lastMove = -9999;
     let agitation = 0;
     let lastScroll = window.scrollY || 0;
@@ -136,36 +156,9 @@ export default function Void() {
       return v;
     };
 
-    let raf = 0;
-    let prev = 0;
-    let running = true;
-
-    const frame = (now: number) => {
-      if (!running) return;
-      const dt = prev ? Math.min((now - prev) / 16.667, 3) : 1;
-      prev = now;
-      const t = now * 0.001;
-
-      const active = now - lastMove < 2600 ? 1 : 0;
-      agitation += (active - agitation) * 0.02 * dt;
-
-      if (px > -9999) {
-        if (smx < -9000) {
-          smx = px;
-          smy = py;
-        }
-        smx += (px - smx) * 0.06 * dt;
-        smy += (py - smy) * 0.06 * dt;
-      }
-
-      const sc = window.scrollY || 0;
-      const dScroll = sc - lastScroll;
-      lastScroll = sc;
-
-      ctx.clearRect(0, 0, W, H);
+    const paintBloomsAndMotes = (t: number, dim: number, dScroll: number, lowQuality: boolean) => {
       ctx.globalCompositeOperation = "lighter";
-
-      const dim = 0.72 + 0.28 * agitation;
+      const [ar, ag, ab] = accentRef.current;
 
       for (const bl of blooms) {
         const bx = (bl.ox + Math.sin(t * bl.sp + bl.ph) * bl.ax) * W;
@@ -180,7 +173,8 @@ export default function Void() {
         ctx.fillRect(0, 0, W, H);
       }
 
-      if (smx > -9000 && agitation > 0.01) {
+      // attention light near the pointer (dropped on low quality)
+      if (!lowQuality && smx > -9000 && agitation > 0.01) {
         const pr = 0.26 * Math.max(W, H);
         const pa = 0.06 * agitation;
         const pg = ctx.createRadialGradient(smx, smy, 0, smx, smy, pr);
@@ -191,9 +185,10 @@ export default function Void() {
       }
 
       const tide = Math.sin(t * 0.06) * 0.18;
-      for (const p of motes) {
-        p.x += (p.vx + tide * (0.4 + p.z)) * dt;
-        p.y += (p.vy + tide * 0.3) * dt;
+      for (let i = 0; i < activeCount; i++) {
+        const p = motes[i];
+        p.x += (p.vx + tide * (0.4 + p.z)) * 1;
+        p.y += (p.vy + tide * 0.3) * 1;
         p.y -= dScroll * p.par;
 
         if (smx > -9000 && agitation > 0.05) {
@@ -204,8 +199,8 @@ export default function Void() {
           if (d2 < R * R && d2 > 0.01) {
             const d = Math.sqrt(d2);
             const push = (1 - d / R) * 0.9 * agitation;
-            p.x += (dx / d) * push * dt;
-            p.y += (dy / d) * push * dt;
+            p.x += (dx / d) * push;
+            p.y += (dy / d) * push;
           }
         }
 
@@ -220,27 +215,71 @@ export default function Void() {
         ctx.drawImage(sprite, p.x - s, p.y - s, s * 2, s * 2);
       }
       ctx.globalAlpha = 1;
-
-      raf = requestAnimationFrame(frame);
     };
 
     const renderStill = () => {
       ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = "lighter";
-      const bx = 0.7 * W;
-      const by = 0.3 * H;
-      const br = 0.6 * Math.max(W, H);
-      const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
-      g.addColorStop(0, `rgba(${ar},${ag},${ab},0.08)`);
-      g.addColorStop(1, `rgba(${ar},${ag},${ab},0)`);
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, W, H);
-      for (const p of motes) {
-        const s = p.size;
-        ctx.globalAlpha = p.a * 0.7;
-        ctx.drawImage(sprite, p.x - s, p.y - s, s * 2, s * 2);
+      paintBloomsAndMotes(0, 0.8, 0, true);
+    };
+    renderStillRef.current = renderStill;
+
+    let raf = 0;
+    let prev = 0;
+    let running = true;
+
+    const frame = (now: number) => {
+      if (!running) return;
+      const dt = prev ? Math.min((now - prev) / 16.667, 3) : 1;
+
+      // ---- adaptive quality: sample FPS, shed motes before jank ----
+      if (prev) {
+        fpsFrames++;
+        fpsElapsed += now - prev;
+        if (fpsElapsed >= 1000) {
+          const fps = (fpsFrames * 1000) / fpsElapsed;
+          fpsFrames = 0;
+          fpsElapsed = 0;
+          if (fps < 45 && quality !== "low") {
+            quality = quality === "high" ? "medium" : "low";
+            goodWindows = 0;
+            setActiveFromQuality();
+            onQuality(quality);
+          } else if (fps > 57 && quality !== "high") {
+            if (++goodWindows >= 4) {
+              quality = quality === "low" ? "medium" : "high";
+              goodWindows = 0;
+              setActiveFromQuality();
+              onQuality(quality);
+            }
+          } else {
+            goodWindows = 0;
+          }
+        }
       }
-      ctx.globalAlpha = 1;
+      prev = now;
+
+      const t = now * 0.001;
+      const active = now - lastMove < 2600 ? 1 : 0;
+      agitation += (active - agitation) * 0.02 * dt;
+
+      if (px > -9999) {
+        if (smx < -9000) { smx = px; smy = py; }
+        smx += (px - smx) * 0.06 * dt;
+        smy += (py - smy) * 0.06 * dt;
+      }
+
+      const sc = window.scrollY || 0;
+      const dScroll = sc - lastScroll;
+      lastScroll = sc;
+
+      // the shared deepen ramp dims the world during transitions
+      const dz = deepen.get();
+      const dim = (0.72 + 0.28 * agitation) * (1 - dz * 0.9);
+
+      ctx.clearRect(0, 0, W, H);
+      paintBloomsAndMotes(t, dim, dScroll, quality === "low");
+
+      raf = requestAnimationFrame(frame);
     };
 
     const onVisibility = () => {
@@ -266,6 +305,7 @@ export default function Void() {
     window.addEventListener("resize", onResize, { passive: true });
 
     build();
+    onQuality(quality);
     if (reduce) renderStill();
     else raf = requestAnimationFrame(frame);
 
@@ -273,12 +313,12 @@ export default function Void() {
       running = false;
       cancelAnimationFrame(raf);
       clearTimeout(resizeT);
+      renderStillRef.current = null;
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
-      probe.remove();
     };
-  }, []);
+  }, [deepen, onQuality]);
 
   return (
     <div ref={hostRef} className={styles.void} aria-hidden>

@@ -1,29 +1,27 @@
 import Surfacing from "@/components/atmosphere/Surfacing";
-import Void from "@/components/atmosphere/Void";
+import CollectionObserver from "@/components/atmosphere/CollectionObserver";
 
 export default function Home() {
   return (
     <main>
-      {/* The persistent environment the memory surfaces out of */}
-      <Void />
-
-      {/* The hero: The Surfacing */}
+      {/* The hero: The Surfacing. The Void is now mounted persistently in
+          the root layout and lives behind every page. */}
       <Surfacing />
 
-      {/* The state it submerges into (placeholder until /the-library lands) */}
-      <section
-        id="drift"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          minHeight: "100vh",
-          display: "grid",
-          placeContent: "center",
-          textAlign: "center",
-          gap: "1.5rem",
-          padding: "8rem var(--gutter)",
-        }}
-      >
+      {/* The state it submerges into. As it enters view, it retints the
+          whole Void to the "submerged" collection's cold light. */}
+      <CollectionObserver name="submerged">
+        <section
+          id="drift"
+          style={{
+            minHeight: "100vh",
+            display: "grid",
+            placeContent: "center",
+            textAlign: "center",
+            gap: "1.5rem",
+            padding: "8rem var(--gutter)",
+          }}
+        >
         <p className="t-label">Waking · No. 1</p>
         <h2
           className="t-memory glow-word"
@@ -43,7 +41,8 @@ export default function Home() {
         >
           The pull of water you can&rsquo;t see, deciding to let it take you.
         </p>
-      </section>
+        </section>
+      </CollectionObserver>
     </main>
   );
 }

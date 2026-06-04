@@ -14,6 +14,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { letter, surface, wordContainer } from "@/lib/motion";
+import { useVoid } from "@/lib/void";
 import styles from "./Surfacing.module.css";
 
 const WORD = "You have been here before";
@@ -21,6 +22,7 @@ const LINE = "Before the word for it. Before you could keep it.";
 
 export default function Surfacing() {
   const reduce = useReducedMotion();
+  const { deepen } = useVoid();
   const heroRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [developed, setDeveloped] = useState(false);
@@ -110,6 +112,7 @@ export default function Surfacing() {
   }, [reduce]);
 
   const descend = () => {
+    deepen(0.5); // the world deepens as we go under
     const next = document.getElementById("drift");
     next?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };

@@ -1,7 +1,7 @@
 /* =====================================================================
-   THE VOID — the persistent background environment (doc: design-system).
-   Eigengrau, the warm dark behind closed eyes, that the hero surfaces
-   out of. Sits behind everything; never interactive.
+   THE VOID — canvas surface. Eigengrau, the warm dark behind closed
+   eyes, that everything surfaces out of. Behind all content; never
+   interactive. (doc: design-system/css/void.css)
    ===================================================================== */
 .void {
   position: fixed;
