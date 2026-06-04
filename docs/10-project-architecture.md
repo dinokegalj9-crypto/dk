@@ -3,6 +3,10 @@
 > The codebase is the constitution made executable. Every structural decision serves the same
 > end: an unbroken emotional descent that is also fast, accessible, and maintainable.
 
+> **⚠ Superseded:** [doc 11 — Architecture, Redesigned](./11-architecture-redesign.md) audits this
+> proposal and supersedes it where they conflict (transitions, scroll, performance, monorepo,
+> i18n, audio, quality gates). Read doc 11 as authoritative; this remains for context and history.
+
 This document defines the **project structure** for the Sensorium build — the stack, the folder
 layout, the rendering and data strategy, and the conventions — **before any implementation code
 is written.** It is a proposal to approve, not a finished app.
