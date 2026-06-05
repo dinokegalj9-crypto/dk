@@ -33,9 +33,11 @@
   transition:
     border-color var(--breath) var(--ease-surface),
     color var(--breath) var(--ease-surface),
-    box-shadow var(--breath) var(--ease-surface);
+    box-shadow var(--breath) var(--ease-surface),
+    transform var(--breath-quick) var(--ease-surface);
 }
 .size:hover { color: var(--text); border-color: var(--text-faint); }
+.size:active { transform: scale(0.97); }
 .size[aria-pressed="true"] {
   color: var(--color-bone-100);
   border-color: var(--accent);
@@ -60,9 +62,11 @@
   transition:
     border-color var(--breath) var(--ease-surface),
     box-shadow var(--breath) var(--ease-surface),
-    color var(--breath) var(--ease-surface);
+    color var(--breath) var(--ease-surface),
+    transform var(--breath-quick) var(--ease-surface);
 }
 .keep:hover { border-color: var(--accent); box-shadow: var(--glow-accent-sm); }
+.keep:active { transform: scale(0.98); }
 .keep:disabled { color: var(--text-faint); cursor: not-allowed; border-color: var(--line-faint); }
 
 .sample {

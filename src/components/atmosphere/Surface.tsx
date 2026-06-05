@@ -11,10 +11,11 @@ import type { ReactNode } from "react";
 import { dur, ease } from "@/lib/motion";
 
 const variants: Variants = {
-  hidden: { opacity: 0, y: 26 },
+  hidden: { opacity: 0, y: 30, scale: 0.985 },
   shown: (i: number = 0) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: { duration: dur.slow, ease: [...ease.out], delay: i * 0.09 },
   }),
 };

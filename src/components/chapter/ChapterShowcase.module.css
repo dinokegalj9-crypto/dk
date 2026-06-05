@@ -52,6 +52,14 @@
   background: var(--accent);
   border-color: var(--accent);
   box-shadow: var(--glow-accent-sm);
+  animation: pip-pulse 3.4s ease-in-out infinite;
+}
+@keyframes pip-pulse {
+  0%, 100% { box-shadow: 0 0 14px -6px var(--accent); }
+  50% { box-shadow: 0 0 26px -4px var(--accent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pip[data-on="true"] { animation: none; }
 }
 .progressLabel {
   font-size: 0.6875rem;

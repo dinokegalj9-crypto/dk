@@ -22,13 +22,20 @@ export default function ChapterShowcase({ chapter, fragments, as: Heading = "h2"
   return (
     <section id="chapter" className={styles.section} aria-label={`Chapter ${chapter.numeral}`}>
       <div className={styles.inner}>
-        <Surface>
-          <div className={styles.head}>
+        <div className={styles.head}>
+          <Surface index={0}>
             <p className="t-label">The active chapter</p>
+          </Surface>
+          <Surface index={1}>
             <Heading className={styles.chapter}>Chapter {chapter.numeral}</Heading>
+          </Surface>
+          <Surface index={2}>
             <p className={styles.title}>{chapter.title}</p>
+          </Surface>
+          <Surface index={3}>
             <p className={styles.premise}>{chapter.premise}</p>
-
+          </Surface>
+          <Surface index={4}>
             <div className={styles.progress}>
               <span className={styles.pips} aria-hidden>
                 {Array.from({ length: chapter.total }).map((_, i) => (
@@ -39,8 +46,8 @@ export default function ChapterShowcase({ chapter, fragments, as: Heading = "h2"
                 {released.length} of {chapter.total} fragments released
               </span>
             </div>
-          </div>
-        </Surface>
+          </Surface>
+        </div>
       </div>
 
       <div className={styles.inner}>

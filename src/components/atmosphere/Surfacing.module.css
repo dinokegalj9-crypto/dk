@@ -103,12 +103,21 @@
 
 .word {
   font-family: var(--font-memory);
-  font-size: var(--text-display-xl);
-  line-height: 0.92;
-  letter-spacing: -0.025em;
+  /* smaller, more considered — a thought, not a billboard */
+  font-size: clamp(2.25rem, 1.4rem + 4vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   color: var(--color-bone-100);
   text-shadow: var(--halo-accent);
-  max-width: 15ch;
+  max-width: 18ch;
+}
+/* once it has formed, it breathes — quietly alive, never still */
+.hero[data-developed="true"] .word {
+  animation: word-breathe 7s ease-in-out 1.6s infinite;
+}
+@keyframes word-breathe {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
 }
 .word span { display: inline-block; white-space: pre; }
 
@@ -169,4 +178,5 @@
   .shroud { opacity: 0 !important; }
   .grain { opacity: 0.4; }
   .rail::after { animation: none; }
+  .hero[data-developed="true"] .word { animation: none; }
 }
