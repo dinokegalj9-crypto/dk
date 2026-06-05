@@ -39,7 +39,8 @@ function resolveAccent(): RGB {
 const QUALITY_SCALE: Record<VoidQuality, number> = { high: 1, medium: 0.66, low: 0.4 };
 
 interface Props {
-  deepen: MotionValue<number>;
+  /** A transition swell of light (0→peak→0): brightens, never darkens. */
+  pulse: MotionValue<number>;
   collection: string;
   /** When true, the Void brightens, multiplies its dots and twinkles —
    *  a live starfield that comes alive with the sound. */
@@ -47,10 +48,11 @@ interface Props {
   onQuality: (q: VoidQuality) => void;
 }
 
-export default function VoidCanvas({ deepen, collection, sound, onQuality }: Props) {
+export default function VoidCanvas({ pulse, collection, sound, onQuality }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const accentRef = useRef<RGB>([201, 130, 78]);
+  const accentRef = useRef<RGB>([201, 130, 78]); // target colour
+  const curAccentRef = useRef<RGB>([201, 130, 78]); // smoothly-morphing colour
   const renderStillRef = useRef<(() => void) | null>(null);
   const soundRef = useRef(false);
 
@@ -59,11 +61,15 @@ export default function VoidCanvas({ deepen, collection, sound, onQuality }: Pro
     soundRef.current = sound;
   }, [sound]);
 
-  // ---- collection change → re-resolve accent (retint) ----------------
+  // ---- collection change → set the target accent; the loop morphs the
+  //      current colour toward it smoothly (no flash, no darkening) ------
   useEffect(() => {
     accentRef.current = resolveAccent();
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) renderStillRef.current?.();
+    if (reduce) {
+      curAccentRef.current = [...accentRef.current]; // snap when still
+      renderStillRef.current?.();
+    }
   }, [collection]);
 
   // ---- the renderer (set up once) ------------------------------------
@@ -80,6 +86,7 @@ export default function VoidCanvas({ deepen, collection, sound, onQuality }: Pro
       (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ?? false;
 
     accentRef.current = resolveAccent();
+    curAccentRef.current = [...accentRef.current];
 
     // soft mote sprite
     const sprite = document.createElement("canvas");
@@ -176,7 +183,7 @@ export default function VoidCanvas({ deepen, collection, sound, onQuality }: Pro
       soundBoost: number,
     ) => {
       ctx.globalCompositeOperation = "lighter";
-      const [ar, ag, ab] = accentRef.current;
+      const [ar, ag, ab] = curAccentRef.current; // the smoothly-morphing colour
 
       for (const bl of blooms) {
         const bx = (bl.ox + Math.sin(t * bl.sp + bl.ph) * bl.ax) * W;
@@ -285,6 +292,13 @@ export default function VoidCanvas({ deepen, collection, sound, onQuality }: Pro
       agitation += (active - agitation) * 0.02 * dt;
       soundBoost += ((soundRef.current ? 1 : 0) - soundBoost) * 0.025 * dt;
 
+      // morph the drawn colour toward the target — a smooth hue crossfade
+      const tgt = accentRef.current;
+      const cur = curAccentRef.current;
+      cur[0] += (tgt[0] - cur[0]) * 0.045 * dt;
+      cur[1] += (tgt[1] - cur[1]) * 0.045 * dt;
+      cur[2] += (tgt[2] - cur[2]) * 0.045 * dt;
+
       if (px > -9999) {
         if (smx < -9000) { smx = px; smy = py; }
         smx += (px - smx) * 0.06 * dt;
@@ -295,9 +309,10 @@ export default function VoidCanvas({ deepen, collection, sound, onQuality }: Pro
       const dScroll = sc - lastScroll;
       lastScroll = sc;
 
-      // the shared deepen ramp dims the world during transitions
-      const dz = deepen.get();
-      const dim = (0.72 + 0.28 * agitation) * (1 - dz * 0.9);
+      // the shared pulse BRIGHTENS the world during transitions (a swell
+      // of light, never a darkening)
+      const pz = pulse.get();
+      const dim = (0.72 + 0.28 * agitation) * (1 + pz * 0.55);
 
       ctx.clearRect(0, 0, W, H);
       paintBloomsAndMotes(t, dim, dScroll, quality === "low", soundBoost);
@@ -341,7 +356,7 @@ export default function VoidCanvas({ deepen, collection, sound, onQuality }: Pro
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [deepen, onQuality]);
+  }, [pulse, onQuality]);
 
   return (
     <div ref={hostRef} className={styles.void} aria-hidden>

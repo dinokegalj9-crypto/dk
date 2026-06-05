@@ -11,11 +11,11 @@ import { createContext, useContext } from "react";
 export type VoidQuality = "high" | "medium" | "low";
 
 export interface VoidControls {
-  /** A transition swell — darkness, then light. "Closing your eyes
-   *  between memories." intensity 0..1 (default 1). */
-  deepen: (intensity?: number) => void;
-  /** Retint the world for a collection (or `null`/"default" to reset),
-   *  riding a gentle deepen so the light changes between rooms. */
+  /** A transition swell of LIGHT — the world brightens and blooms, then
+   *  settles. intensity 0..1 (default 1). Not a darkening. */
+  bloom: (intensity?: number) => void;
+  /** Retint the world for a collection (or `null`/"default" to reset);
+   *  the colour morphs smoothly and a soft light blooms between rooms. */
   setCollection: (name: string | null) => void;
   /** Current adaptive render quality (auto-degrades under load). */
   quality: VoidQuality;
@@ -24,7 +24,7 @@ export interface VoidControls {
 }
 
 const noop: VoidControls = {
-  deepen: () => {},
+  bloom: () => {},
   setCollection: () => {},
   quality: "high",
   setSound: () => {},

@@ -16,7 +16,7 @@ import styles from "./chrome.module.css";
 
 export default function Chrome() {
   const [open, setOpen] = useState(false);
-  const { deepen } = useVoid();
+  const { bloom } = useVoid();
 
   // hold the body still while the menu is summoned
   useEffect(() => {
@@ -38,8 +38,8 @@ export default function Chrome() {
 
   const navigate = useCallback(() => {
     setOpen(false);
-    deepen(0.7); // close your eyes between rooms
-  }, [deepen]);
+    bloom(0.7); // a swell of light between rooms
+  }, [bloom]);
 
   return (
     <>

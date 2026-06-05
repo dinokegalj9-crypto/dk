@@ -3,62 +3,62 @@
 /* =====================================================================
    THE VOID SYSTEM — mounted ONCE in the root layout, persistent across
    navigation so the world is never broken between scenes. Owns the
-   canvas, the deepen veil, and the shared `deepen` MotionValue, and
-   exposes the control surface (deepen / setCollection / quality) to the
-   whole tree via context. (doc 11 §B3, §B7)
+   canvas and the shared `pulse` MotionValue, and exposes the control
+   surface (bloom / setCollection / quality / setSound) via context.
+
+   Transitions are LIGHT, not dark: the accent colour morphs smoothly in
+   the canvas and a soft bloom of light swells and settles. (doc 11 §B3)
    ===================================================================== */
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { animate, useMotionValue } from "framer-motion";
 import { VoidContext, type VoidControls, type VoidQuality } from "@/lib/void";
 import VoidCanvas from "./VoidCanvas";
-import DeepenVeil from "./DeepenVeil";
 
 function prefersReduced(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 export default function VoidSystem({ children }: { children: ReactNode }) {
-  const deepen = useMotionValue(0);
+  const pulse = useMotionValue(0); // 0 → peak → 0 : a swell of light
   const [collection, setCollectionState] = useState("default");
   const [quality, setQuality] = useState<VoidQuality>("high");
   const [sound, setSoundState] = useState(false);
 
-  const triggerDeepen = useCallback(
+  const bloom = useCallback(
     (intensity = 1) => {
       if (prefersReduced()) return; // a still Sensorium is still Sensorium
       const peak = Math.max(0, Math.min(1, intensity));
-      // long, symmetric ease-in-out → a slow swell into the dark and back
-      animate(deepen, [deepen.get(), peak, 0], {
-        duration: 2.6,
-        times: [0, 0.5, 1],
+      // a slow, symmetric swell of light — never a darkening
+      animate(pulse, [pulse.get(), peak, 0], {
+        duration: 2.4,
+        times: [0, 0.45, 1],
         ease: "easeInOut",
       });
     },
-    [deepen],
+    [pulse],
   );
 
   const setCollection = useCallback(
     (name: string | null) => {
       const next = name && name !== "default" ? name : "default";
       document.documentElement.setAttribute("data-collection", next);
-      setCollectionState(next);
-      triggerDeepen(0.4); // scrolling between fragments dims a little, gently
+      setCollectionState(next); // canvas morphs its colour smoothly to match
+      bloom(0.45); // a soft light blooms as the new fragment arrives
     },
-    [triggerDeepen],
+    [bloom],
   );
 
   const setSound = useCallback((on: boolean) => setSoundState(on), []);
 
   const controls = useMemo<VoidControls>(
-    () => ({ deepen: triggerDeepen, setCollection, quality, setSound }),
-    [triggerDeepen, setCollection, quality, setSound],
+    () => ({ bloom, setCollection, quality, setSound }),
+    [bloom, setCollection, quality, setSound],
   );
 
   return (
     <VoidContext.Provider value={controls}>
-      <VoidCanvas deepen={deepen} collection={collection} sound={sound} onQuality={setQuality} />
+      <VoidCanvas pulse={pulse} collection={collection} sound={sound} onQuality={setQuality} />
       <div className="void-content">{children}</div>
-      <DeepenVeil deepen={deepen} />
     </VoidContext.Provider>
   );
 }

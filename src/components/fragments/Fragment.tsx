@@ -24,7 +24,7 @@ export default function Fragment({
   index?: number;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const { setCollection, deepen } = useVoid();
+  const { setCollection, bloom } = useVoid();
 
   useEffect(() => {
     const el = ref.current;
@@ -57,7 +57,7 @@ export default function Fragment({
         <Link
           className={`${styles.featuredLink} ${index % 2 === 1 ? styles.flip : ""}`}
           href={`/fragrance/${f.slug}`}
-          onClick={() => deepen(0.6)} // the world dims as you go in
+          onClick={() => bloom(0.6)} // the world blooms with light as you go in
           aria-label={`Chapter ${f.chapterNumeral}, Fragment ${f.fragmentNumeral} — ${f.name}`}
         >
           <Surface className={styles.vessel}>

@@ -22,7 +22,7 @@ const LINE = "Before the word for it. Before you could keep it.";
 
 export default function Surfacing() {
   const reduce = useReducedMotion();
-  const { deepen } = useVoid();
+  const { bloom } = useVoid();
   const heroRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [developed, setDeveloped] = useState(false);
@@ -112,7 +112,7 @@ export default function Surfacing() {
   }, [reduce]);
 
   const descend = () => {
-    deepen(0.5); // the world deepens as we go under
+    bloom(0.5); // a soft swell of light as we go under
     const next = document.getElementById("drift");
     next?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };
