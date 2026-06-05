@@ -1,0 +1,119 @@
+/* =====================================================================
+   KEEP PANEL — the conversion moment. Price visible, size chosen, the
+   keeping framed as keeping. Sampling is offered first-class, because
+   you cannot smell through a screen. (doc 09 §3.1, §2.3 / doc 12)
+   ===================================================================== */
+.panel {
+  border-top: 1px solid var(--line-faint);
+  padding-top: clamp(3rem, 7vh, 5rem);
+  margin-top: clamp(3rem, 7vh, 5rem);
+  display: grid;
+  gap: 2rem;
+  max-width: 40rem;
+}
+
+.price {
+  font-family: var(--font-memory);
+  font-size: var(--text-display);
+  line-height: 1;
+  color: var(--color-bone-100);
+  letter-spacing: -0.02em;
+}
+
+.sizes { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.size {
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  color: var(--text-quiet);
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    border-color var(--breath) var(--ease-surface),
+    color var(--breath) var(--ease-surface),
+    box-shadow var(--breath) var(--ease-surface);
+}
+.size:hover { color: var(--text); border-color: var(--text-faint); }
+.size[aria-pressed="true"] {
+  color: var(--color-bone-100);
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent-sm);
+}
+
+.actions { display: grid; gap: 1rem; }
+@media (min-width: 32rem) {
+  .actions { grid-template-columns: auto auto; align-items: center; justify-content: start; gap: 2rem; }
+}
+
+.keep {
+  padding: 1rem 2.25rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--veil-ink-92);
+  color: var(--color-bone-100);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color var(--breath) var(--ease-surface),
+    box-shadow var(--breath) var(--ease-surface),
+    color var(--breath) var(--ease-surface);
+}
+.keep:hover { border-color: var(--accent); box-shadow: var(--glow-accent-sm); }
+.keep:disabled { color: var(--text-faint); cursor: not-allowed; border-color: var(--line-faint); }
+
+.sample {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--text-quiet);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  text-align: left;
+  transition: color var(--breath-quick) var(--ease-surface);
+}
+.sample:hover { color: var(--color-bone-100); }
+.sample u { text-decoration-color: var(--accent); text-underline-offset: 4px; }
+
+.lifecycle { font-size: 0.8125rem; letter-spacing: 0.02em; color: var(--accent); }
+
+.said {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--text-subhead);
+  color: var(--text-quiet);
+  max-width: 34ch;
+}
+
+.intent { display: grid; gap: 1rem; max-width: 26rem; }
+.intentRow { display: flex; align-items: flex-end; gap: 1rem; }
+.field { flex: 1; display: grid; gap: 0.5rem; }
+.input {
+  width: 100%;
+  padding: 0.5rem 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: 1.0625rem;
+  transition: border-color var(--breath) var(--ease-surface);
+}
+.input::placeholder { color: var(--text-faint); }
+.input:focus { outline: none; border-color: var(--accent); }
+.submit {
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--text-quiet);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color var(--breath-quick) var(--ease-surface);
+}
+.submit:hover { color: var(--accent); }

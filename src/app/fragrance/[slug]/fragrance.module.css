@@ -35,19 +35,15 @@
   color: var(--text);
 }
 
-.keep {
-  margin-top: 3rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 1rem 2.5rem;
-}
-.keepNote {
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
-  color: var(--accent);
+/* the quiet facts zone, set in an intimate reading measure */
+.facts {
+  max-width: 46rem;
+  margin-inline: auto;
+  padding: 0 var(--gutter) clamp(6rem, 14vh, 11rem);
+  display: grid;
 }
 .back {
+  margin-top: clamp(3rem, 7vh, 5rem);
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
   color: var(--text-faint);

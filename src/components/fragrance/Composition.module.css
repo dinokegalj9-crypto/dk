@@ -1,0 +1,62 @@
+/* =====================================================================
+   COMPOSITION — the quiet, factual zone beneath the immersion. The
+   state leads the page; here, honestly, is what it's made of and who
+   made it. (doc 06 §6, doc 09 §3.1)
+   ===================================================================== */
+.section {
+  border-top: 1px solid var(--line-faint);
+  padding-top: clamp(3rem, 7vh, 5rem);
+  margin-top: clamp(4rem, 9vh, 7rem);
+  display: grid;
+  gap: clamp(3rem, 7vh, 5rem);
+}
+
+/* the nose, named — credibility, quietly */
+.author {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--text-subhead);
+  color: var(--text-quiet);
+}
+.author strong { color: var(--color-bone-100); font-weight: 400; font-style: normal; }
+
+/* notes, as the scent moves through time */
+.arc {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+  .arc { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+}
+.phase { display: grid; gap: 0.75rem; align-content: start; }
+.phaseLabel { color: var(--accent); }
+.notes {
+  font-family: var(--font-memory);
+  font-size: var(--text-subhead);
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* the specifications a connoisseur checks */
+.specs {
+  display: grid;
+  gap: 1.5rem 3rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 34rem) {
+  .specs { grid-template-columns: repeat(2, 1fr); }
+}
+.spec { display: grid; gap: 0.4rem; }
+.specValue {
+  font-family: var(--font-memory);
+  font-size: var(--text-body-lg);
+  color: var(--color-bone-100);
+}
+
+.honesty {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-faint);
+  max-width: 60ch;
+}

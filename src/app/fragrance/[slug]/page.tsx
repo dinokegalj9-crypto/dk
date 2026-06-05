@@ -3,10 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SetCollection from "@/components/atmosphere/SetCollection";
 import Surface from "@/components/atmosphere/Surface";
+import Composition from "@/components/fragrance/Composition";
+import KeepPanel from "@/components/fragrance/KeepPanel";
 import { getFragrance, getFragrances } from "@/lib/content";
+import { productJsonLd } from "@/lib/seo";
 import styles from "./fragrance.module.css";
 
-/* Limited catalogue → fully static (doc 11 §B10). */
 export function generateStaticParams() {
   return getFragrances().map((f) => ({ slug: f.slug }));
 }
@@ -19,9 +21,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const f = getFragrance(slug);
   if (!f) return {};
+  const notes = [...f.composition.opens, ...f.composition.becomes, ...f.composition.stays];
   return {
     title: f.name,
-    description: f.state,
+    description: `${f.state} A ${f.concentration} by ${f.perfumer}. Notes of ${notes.join(", ")}.`,
     openGraph: { title: `${f.name} · Sensorium`, description: f.state },
   };
 }
@@ -37,9 +40,14 @@ export default async function FragrancePage({
 
   return (
     <main>
-      {/* the whole room takes this state's light */}
       <SetCollection name={f.collection} />
+      {/* discoverable by note and name — the substance for machines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(f)) }}
+      />
 
+      {/* the immersion still leads */}
       <article className={styles.entry}>
         <Surface>
           <p className="t-label">{f.note}</p>
@@ -58,16 +66,17 @@ export default async function FragrancePage({
             </Surface>
           ))}
         </div>
-
-        <Surface index={5}>
-          <div className={styles.keep}>
-            <span className={styles.keepNote}>{f.keep.note}</span>
-            <Link href="/" className={styles.back}>
-              ← back to the surface
-            </Link>
-          </div>
-        </Surface>
       </article>
+
+      {/* then the quiet facts, and the way to keep it */}
+      <div className={styles.facts}>
+        <Composition fragrance={f} />
+        <KeepPanel fragrance={f} />
+
+        <Link href="/the-library" className={styles.back}>
+          ← every state
+        </Link>
+      </div>
     </main>
   );
 }
