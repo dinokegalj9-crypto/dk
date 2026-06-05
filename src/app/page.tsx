@@ -1,17 +1,18 @@
 import Surfacing from "@/components/atmosphere/Surfacing";
-import FragmentShowcase from "@/components/fragments/FragmentShowcase";
+import ChapterShowcase from "@/components/chapter/ChapterShowcase";
 import Philosophy from "@/components/sections/Philosophy";
-import { getFragrances } from "@/lib/content";
+import { getActiveChapter, getFragments } from "@/lib/content";
 
 export default function Home() {
-  const fragrances = getFragrances();
+  const chapter = getActiveChapter();
+  const fragments = getFragments(chapter.slug);
   return (
     <main>
       {/* The hero: The Surfacing. The Void lives in the root layout. */}
       <Surfacing />
 
-      {/* The Drift: states as fragments, retinting the Void as they pass. */}
-      <FragmentShowcase fragrances={fragrances} />
+      {/* Chapter I — the active era, collected fragment by fragment. */}
+      <ChapterShowcase chapter={chapter} fragments={fragments} />
 
       {/* The House: why Sensorium exists. */}
       <Philosophy />

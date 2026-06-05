@@ -50,6 +50,7 @@
   width: fit-content;
 }
 .link:hover { color: var(--color-bone-100); }
+.linkMuted { color: var(--text-faint); font-size: 0.9375rem; }
 
 .bottom {
   display: flex;

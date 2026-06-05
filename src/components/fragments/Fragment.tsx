@@ -1,73 +1,92 @@
 "use client";
 
 /* =====================================================================
-   FRAGMENT — a single state, encountered as a fragment of memory.
-   Surfaces on view (via <Surface/>), and — when `retint` is set —
-   turns the whole Void to its collection's light as it centers, so
-   scrolling the showcase changes the room you're standing in.
+   FRAGMENT — a piece of a chapter, not a standalone product. Shows the
+   Chapter → Fragment → Name hierarchy. Released fragments carry their
+   vessel and link to their page; forthcoming fragments appear as a
+   faceted shard, "not yet formed". Either way, on view the fragment
+   casts its light across the Void.
    ===================================================================== */
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, type CSSProperties } from "react";
-import Surface from "@/components/atmosphere/Surface";
 import { useVoid } from "@/lib/void";
 import type { Fragrance } from "@/types/content";
 import styles from "./Fragment.module.css";
 
-interface Props {
-  fragrance: Fragrance;
-  index: number;
-  /** Retint the Void to this fragrance's collection while it's centered. */
-  retint?: boolean;
-}
-
-export default function Fragment({ fragrance, index, retint = false }: Props) {
-  const { name, slug, state, note, tone, collection } = fragrance;
+export default function Fragment({ fragrance: f }: { fragrance: Fragrance }) {
   const ref = useRef<HTMLElement>(null);
   const { setCollection } = useVoid();
 
   useEffect(() => {
-    if (!retint) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
       ([entry]) => {
-        // Hand-off, not reset: when this fragment centers, the world
-        // becomes its light. The next fragment takes over from there.
-        if (entry.isIntersecting) setCollection(collection);
+        if (entry.isIntersecting) setCollection(f.collection);
       },
-      { threshold: 0.6 },
+      { threshold: 0.55 },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [retint, collection, setCollection]);
+  }, [f.collection, setCollection]);
 
-  const align = index % 2 === 0 ? styles.alignLeft : styles.alignRight;
+  const toneStyle = { ["--tone" as string]: f.tone } as CSSProperties;
 
-  return (
-    <Surface amount={0.25}>
-      <article
-        ref={ref}
-        className={`${styles.fragment} ${align}`}
-        style={{ ["--tone" as keyof CSSProperties]: tone } as CSSProperties}
-      >
-        <Link className={styles.link} href={`/fragrance/${slug}`} aria-label={`${name} — ${state}`}>
-          <div className={styles.imageWrap}>
-            <div className={styles.image}>
-              {/* tonal, lit placeholder until art-directed photography
-                  lands (doc 11 §B6); composed entirely from --tone */}
-              <div className={styles.imageInner} />
-            </div>
+  const hierarchy = (
+    <div className={styles.hier}>
+      <p className="t-label">Chapter {f.chapterNumeral}</p>
+      <span className={styles.tick} aria-hidden />
+      <p className={styles.fragmentLine}>
+        Fragment {f.fragmentNumeral} · {f.facet}
+      </p>
+    </div>
+  );
+
+  if (f.status === "available") {
+    return (
+      <article ref={ref} className={styles.featured} style={toneStyle}>
+        <Link
+          className={styles.featuredLink}
+          href={`/fragrance/${f.slug}`}
+          aria-label={`Chapter ${f.chapterNumeral}, Fragment ${f.fragmentNumeral} — ${f.name}`}
+        >
+          <div className={styles.shot}>
+            {f.image ? (
+              <Image
+                src={f.image}
+                alt={`${f.name}, Fragment ${f.fragmentNumeral} — a faceted crystal vessel lit amber on dark stone, like a shard of memory held to the light.`}
+                fill
+                sizes="(max-width: 52rem) 84vw, 40vw"
+                className={styles.shotImg}
+                priority
+              />
+            ) : (
+              <div className={styles.placeholder} />
+            )}
           </div>
           <div className={styles.meta}>
-            <p className="t-label">{note}</p>
-            <h3 className={styles.name}>{name}</h3>
-            <p className={styles.state}>{state}</p>
+            {hierarchy}
+            <h3 className={styles.name}>{f.name}</h3>
+            <p className={styles.state}>{f.state}</p>
             <span className={styles.enter}>
-              Enter this state <span className={styles.arrow} aria-hidden>→</span>
+              Hold this fragment <span className={styles.arrow} aria-hidden>→</span>
             </span>
           </div>
         </Link>
       </article>
-    </Surface>
+    );
+  }
+
+  return (
+    <article ref={ref} className={styles.forthcoming} style={toneStyle}>
+      <div className={styles.shard} aria-hidden />
+      <div className={styles.meta}>
+        {hierarchy}
+        <p className={styles.facetTitle}>{f.facet}</p>
+        <p className={styles.stateMuted}>{f.state}</p>
+        <p className={styles.locked}>Not yet formed</p>
+      </div>
+    </article>
   );
 }

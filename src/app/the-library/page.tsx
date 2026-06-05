@@ -1,23 +1,19 @@
 import type { Metadata } from "next";
-import FragmentShowcase from "@/components/fragments/FragmentShowcase";
-import { getFragrances } from "@/lib/content";
+import ChapterShowcase from "@/components/chapter/ChapterShowcase";
+import { getActiveChapter, getFragments } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "The Library",
-  description: "Each is a state. Find the one you've been missing.",
+  description:
+    "Chapter I — Origins. Collect the fragments from which a self is first assembled. You are not buying a perfume; you are collecting the fragments of a life.",
 };
 
 export default function TheLibraryPage() {
-  const fragrances = getFragrances();
+  const chapter = getActiveChapter();
+  const fragments = getFragments(chapter.slug);
   return (
-    <main style={{ paddingTop: "6rem" }}>
-      <FragmentShowcase
-        fragrances={fragrances}
-        as="h1"
-        eyebrow="The Library"
-        heading="Every state we hold. Find the one you've been missing."
-        coda="When a state is gone, it rests. Some return; some remain only as memory."
-      />
+    <main style={{ paddingTop: "5rem" }}>
+      <ChapterShowcase chapter={chapter} fragments={fragments} as="h1" />
     </main>
   );
 }

@@ -9,12 +9,12 @@
    ===================================================================== */
 import { useState } from "react";
 import { formatMoney } from "@/lib/format";
-import type { Fragrance } from "@/types/content";
+import type { AvailableFragment } from "@/types/content";
 import styles from "./KeepPanel.module.css";
 
 const SAMPLE_PRICE = 6;
 
-export default function KeepPanel({ fragrance: f }: { fragrance: Fragrance }) {
+export default function KeepPanel({ fragrance: f }: { fragrance: AvailableFragment }) {
   const [size, setSize] = useState(f.sizes[0]);
   const [intent, setIntent] = useState<null | "keep" | "sample">(null);
   const [said, setSaid] = useState(false);

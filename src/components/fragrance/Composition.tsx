@@ -4,10 +4,10 @@
    the concentration, longevity, sillage, provenance, and the IFRA line.
    ===================================================================== */
 import Surface from "@/components/atmosphere/Surface";
-import type { Fragrance } from "@/types/content";
+import type { AvailableFragment } from "@/types/content";
 import styles from "./Composition.module.css";
 
-export default function Composition({ fragrance: f }: { fragrance: Fragrance }) {
+export default function Composition({ fragrance: f }: { fragrance: AvailableFragment }) {
   return (
     <section className={styles.section} aria-label="Composition">
       <Surface>

@@ -1,0 +1,89 @@
+/* =====================================================================
+   CHAPTER — the active era, presented as a story being collected, not a
+   shelf of products. (doc 02 §2)
+   ===================================================================== */
+.section {
+  position: relative;
+  padding-block: clamp(7rem, 15vh, 13rem);
+}
+.inner {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.head { display: grid; gap: 1rem; max-width: 40rem; }
+.chapter {
+  font-family: var(--font-memory);
+  font-size: var(--text-display);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-bone-100);
+}
+.title {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--text-headline);
+  color: var(--accent);
+}
+.premise {
+  font-size: var(--text-body-lg);
+  line-height: 1.7;
+  color: var(--text-quiet);
+  max-width: 46ch;
+  margin-top: 1.5rem;
+}
+
+/* the collecting indicator — a story being assembled */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.pips { display: inline-flex; gap: 0.5rem; }
+.pip {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--line);
+  transform: rotate(45deg); /* a small diamond — a fragment */
+}
+.pip[data-on="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent-sm);
+}
+.progressLabel {
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.featured { margin-top: clamp(4rem, 10vh, 8rem); }
+
+.forthcomingHead {
+  margin-top: clamp(5rem, 12vh, 9rem);
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+.forthcomingGrid {
+  display: grid;
+  gap: clamp(3rem, 8vh, 5rem) clamp(2rem, 5vw, 4rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 46rem) {
+  .forthcomingGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.coda {
+  margin-top: clamp(6rem, 14vh, 10rem);
+  text-align: center;
+}
+.codaLine {
+  font-family: var(--font-memory);
+  font-style: italic;
+  font-size: var(--text-subhead);
+  color: var(--text-quiet);
+  max-width: 30ch;
+  margin-inline: auto;
+}

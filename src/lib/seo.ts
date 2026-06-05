@@ -4,11 +4,11 @@
    leads for humans; this Product schema (with the real accords and
    price) makes the page legible to machines so it can be found at all.
    ===================================================================== */
-import type { Fragrance } from "@/types/content";
+import type { AvailableFragment } from "@/types/content";
 
 const SITE_URL = "https://sensorium.example";
 
-const availabilityFor = (mode: Fragrance["keep"]["mode"]): string => {
+const availabilityFor = (mode: AvailableFragment["keep"]["mode"]): string => {
   switch (mode) {
     case "available":
       return "https://schema.org/InStock";
@@ -19,15 +19,15 @@ const availabilityFor = (mode: Fragrance["keep"]["mode"]): string => {
   }
 };
 
-export function productJsonLd(f: Fragrance) {
+export function productJsonLd(f: AvailableFragment) {
   const notes = [...f.composition.opens, ...f.composition.becomes, ...f.composition.stays];
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: f.name,
+    name: `${f.name} — Chapter ${f.chapterNumeral}, Fragment ${f.fragmentNumeral}`,
     category: "Fragrance",
     brand: { "@type": "Brand", name: "Sensorium" },
-    description: `${f.state} A ${f.concentration} by ${f.perfumer}. Notes of ${notes.join(", ")}.`,
+    description: `${f.state} Fragment ${f.fragmentNumeral} of Sensorium Chapter ${f.chapterNumeral}. A ${f.concentration} by ${f.perfumer}. Notes of ${notes.join(", ")}.`,
     url: `${SITE_URL}/fragrance/${f.slug}`,
     offers: f.sizes.map((s) => ({
       "@type": "Offer",

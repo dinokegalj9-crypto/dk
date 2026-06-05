@@ -1,12 +1,28 @@
 /* =====================================================================
-   SENSORIUM — CONTENT TYPES
-   The typed model the experience is built on (doc 11 §B6 / doc 12).
-   Now carries what a connoisseur needs to trust and to buy: the nose,
-   the concentration, the accords, longevity, edition, and price — the
-   facts live in a quiet zone, but they are never withheld.
+   SENSORIUM — CONTENT MODEL
+   Sensorium is a journey through consciousness and memory, not a
+   catalogue of perfumes.
+
+     Chapter  = a life stage / psychological era
+     Fragment = a single perfume — a piece of memory, consciousness,
+                emotion, or identity — collected within a chapter.
+
+   A Fragment is never a standalone product; it belongs to a chapter and
+   to a larger story the customer is assembling.
    ===================================================================== */
 
 export type Collection = "waking" | "submerged" | "residue" | "long-afternoon";
+export type Facet = "Memory" | "Consciousness" | "Emotion" | "Identity";
+export type FragmentStatus = "available" | "forthcoming";
+
+export interface Chapter {
+  slug: string; // "i"
+  numeral: string; // "I"
+  title: string; // a psychological era
+  era: string; // one line
+  premise: string;
+  total: number; // how many fragments the chapter will hold
+}
 
 /** Notes, honestly — as the scent moves through time. */
 export interface Composition {
@@ -17,32 +33,44 @@ export interface Composition {
 
 export interface Size {
   ml: number;
-  /** Price in major currency units (e.g. pounds). */
   price: number;
 }
 
-export interface Fragrance {
+interface FragmentBase {
   slug: string;
-  name: string;
-  state: string;
+  chapterSlug: string;
+  chapterNumeral: string; // "I"
+  fragmentNumeral: string; // "I", "II", …
+  facet: Facet;
+  /** The collection light this fragment casts on the Void. */
   collection: Collection;
-  note: string;
   tone: string;
-  /** The memory unfolding in time — second person, present tense. */
+  /** The state, stated as if you already know it. */
+  state: string;
+  image?: string;
+}
+
+/** A released fragment — fully realised, navigable, purchasable. */
+export interface AvailableFragment extends FragmentBase {
+  status: "available";
+  name: string;
   unfolding: string[];
-
-  /* ---- the facts a buyer needs (the quiet zone) ---- */
-  /** "The nose" — the author. Credibility, named. */
   perfumer: string;
-  concentration: string; // e.g. "Extrait de Parfum · 28%"
+  concentration: string;
   composition: Composition;
-  longevity: string; // e.g. "8–10 hours"
-  sillage: string; // e.g. "intimate" | "moderate" | "fills a room"
-  madeIn: string; // e.g. "Composed in Grasse"
+  longevity: string;
+  sillage: string;
+  madeIn: string;
   sizes: Size[];
-  currency: string; // ISO 4217, e.g. "GBP"
-
-  /* ---- drops model (doc 12) ---- */
+  currency: string;
   keep: { mode: "preorder" | "available" | "resting"; note: string };
   edition?: string;
 }
+
+/** A fragment still to come — named only by its number and its facet. */
+export interface ForthcomingFragment extends FragmentBase {
+  status: "forthcoming";
+  name?: string;
+}
+
+export type Fragrance = AvailableFragment | ForthcomingFragment;
