@@ -24,16 +24,18 @@
   color: var(--color-bone-100);
 }
 .lead {
+  font-family: var(--font-memory);
   font-size: var(--text-subhead);
-  line-height: 1.55;
+  line-height: 1.45;
   color: var(--text);
-  max-width: 40ch;
+  max-width: 36ch;
 }
 .body {
+  font-family: var(--font-memory);
   font-size: var(--text-body-lg, 1.25rem);
-  line-height: 1.75;
+  line-height: 1.7;
   color: var(--text-quiet);
-  max-width: 60ch;
+  max-width: 56ch;
 }
 
 .quote {

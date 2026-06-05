@@ -1,11 +1,13 @@
 "use client";
 
 /* =====================================================================
-   SOUND TOGGLE — always opt-in, calm, ever-present (doc 04 §6). Drives
-   the synthesised ambient bed. Remembers the choice; because browsers
-   block autoplay, a previously-on bed resumes on the first gesture.
+   SOUND TOGGLE — the piece is ON by default. Browsers forbid audio
+   before a gesture, so we arm the first interaction (touch / scroll /
+   key / click) to start it — effectively "on when you enter". Touch the
+   control to turn it off; the choice is remembered. The engine is a
+   singleton, so it plays continuously and never restarts on navigation.
    ===================================================================== */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { disableAmbient, enableAmbient } from "@/lib/sound/ambient";
 import { useVoid } from "@/lib/void";
 import styles from "./chrome.module.css";
@@ -14,28 +16,30 @@ const KEY = "sensorium:sound";
 
 export default function SoundToggle() {
   const [on, setOn] = useState(false);
+  const startedRef = useRef(false);
   const { setSound } = useVoid();
 
-  // restore the preference — resume on the first gesture (autoplay policy)
   useEffect(() => {
-    if (localStorage.getItem(KEY) !== "on") return;
-    const resume = () => {
-      void enableAmbient().then(() => {
-        setOn(true);
-        setSound(true); // wake the starfield
-      });
-      window.removeEventListener("pointerdown", resume);
-      window.removeEventListener("keydown", resume);
+    // default ON unless the visitor previously turned it off
+    if (localStorage.getItem(KEY) === "off") return;
+    setOn(true);
+    setSound(true); // the starfield wakes with it
+
+    const start = () => {
+      if (startedRef.current) return;
+      startedRef.current = true;
+      void enableAmbient();
+      remove();
     };
-    window.addEventListener("pointerdown", resume, { once: true });
-    window.addEventListener("keydown", resume, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", resume);
-      window.removeEventListener("keydown", resume);
-    };
+    const events = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"];
+    const remove = () =>
+      events.forEach((e) => window.removeEventListener(e, start));
+    events.forEach((e) => window.addEventListener(e, start, { passive: true }));
+    return remove;
   }, [setSound]);
 
   const toggle = async () => {
+    startedRef.current = true; // we are now driven by the button
     if (on) {
       disableAmbient();
       setOn(false);

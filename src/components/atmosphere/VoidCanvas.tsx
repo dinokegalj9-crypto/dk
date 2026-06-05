@@ -18,6 +18,7 @@ import styles from "./VoidCanvas.module.css";
 interface Mote {
   x: number; y: number; z: number; size: number; a: number;
   vx: number; vy: number; ph: number; fs: number; par: number;
+  sharp: boolean; // crisp far pinpoint vs soft near orb (depth of field)
 }
 interface Bloom {
   ox: number; oy: number; ax: number; ay: number; sp: number; ph: number; r: number; a: number;
@@ -88,16 +89,30 @@ export default function VoidCanvas({ pulse, collection, sound, onQuality }: Prop
     accentRef.current = resolveAccent();
     curAccentRef.current = [...accentRef.current];
 
-    // soft mote sprite
-    const sprite = document.createElement("canvas");
-    sprite.width = sprite.height = 64;
-    const sctx = sprite.getContext("2d")!;
-    const sg = sctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    sg.addColorStop(0, "rgba(237,231,221,1)");
-    sg.addColorStop(0.35, "rgba(237,231,221,0.5)");
-    sg.addColorStop(1, "rgba(237,231,221,0)");
-    sctx.fillStyle = sg;
-    sctx.fillRect(0, 0, 64, 64);
+    // Two sprites for depth-of-field: a SOFT blurred orb (near, out of
+    // focus) and a CRISP pinpoint (far, in focus) — together they read
+    // as 3D specks at different depths.
+    const makeSprite = (stops: Array<[number, string]>) => {
+      const c = document.createElement("canvas");
+      c.width = c.height = 64;
+      const cc = c.getContext("2d")!;
+      const g = cc.createRadialGradient(32, 32, 0, 32, 32, 32);
+      for (const [o, col] of stops) g.addColorStop(o, col);
+      cc.fillStyle = g;
+      cc.fillRect(0, 0, 64, 64);
+      return c;
+    };
+    const spriteSoft = makeSprite([
+      [0, "rgba(237,231,221,0.85)"],
+      [0.35, "rgba(237,231,221,0.4)"],
+      [1, "rgba(237,231,221,0)"],
+    ]);
+    const spriteSharp = makeSprite([
+      [0, "rgba(244,239,230,1)"],
+      [0.28, "rgba(240,234,224,0.92)"],
+      [0.5, "rgba(237,231,221,0.18)"],
+      [1, "rgba(237,231,221,0)"],
+    ]);
 
     let W = 0;
     let H = 0;
@@ -118,15 +133,18 @@ export default function VoidCanvas({ pulse, collection, sound, onQuality }: Prop
 
     const makeMote = (): Mote => {
       const z = Math.random();
+      // far half are crisp pinpoints; near half are big soft orbs
+      const sharp = z < 0.58;
       return {
         x: Math.random() * W, y: Math.random() * H, z,
-        size: 0.6 + z * z * 7,
-        a: 0.1 + (1 - z) * 0.3,
+        sharp,
+        size: sharp ? 0.5 + z * 1.5 : 2.6 + z * 7.5,
+        a: sharp ? 0.22 + Math.random() * 0.34 : 0.07 + Math.random() * 0.16,
         vx: (Math.random() - 0.5) * 0.12 * (0.4 + z),
         vy: (Math.random() - 0.5) * 0.1 * (0.4 + z),
         ph: Math.random() * Math.PI * 2,
         fs: 0.15 + Math.random() * 0.25,
-        par: 0.02 + z * 0.14,
+        par: 0.02 + z * 0.18, // nearer orbs parallax more → depth
       };
     };
 
@@ -141,8 +159,8 @@ export default function VoidCanvas({ pulse, collection, sound, onQuality }: Prop
 
       // the high-water mote count; quality scales how many we actually draw.
       // we allocate extra so the sound-on starfield has more dots to reveal.
-      maxCount = Math.max(14, Math.min(72, Math.round((W * H) / 26000)));
-      const starMax = Math.max(maxCount, Math.min(180, Math.round(maxCount * 1.9)));
+      maxCount = Math.max(22, Math.min(120, Math.round((W * H) / 17000)));
+      const starMax = Math.max(maxCount, Math.min(240, Math.round(maxCount * 1.9)));
       motes = Array.from({ length: starMax }, makeMote);
       setActiveFromQuality();
 
@@ -241,7 +259,7 @@ export default function VoidCanvas({ pulse, collection, sound, onQuality }: Prop
         if (alpha <= 0.004) continue;
         const s = p.size;
         ctx.globalAlpha = alpha;
-        ctx.drawImage(sprite, p.x - s, p.y - s, s * 2, s * 2);
+        ctx.drawImage(p.sharp ? spriteSharp : spriteSoft, p.x - s, p.y - s, s * 2, s * 2);
       }
       ctx.globalAlpha = 1;
     };
