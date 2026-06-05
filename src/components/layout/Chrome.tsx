@@ -11,11 +11,11 @@ import { useCallback, useEffect, useState } from "react";
 import { primaryNav, SITE } from "@/config/site";
 import { useVoid } from "@/lib/void";
 import { dur, ease } from "@/lib/motion";
+import SoundToggle from "./SoundToggle";
 import styles from "./chrome.module.css";
 
 export default function Chrome() {
   const [open, setOpen] = useState(false);
-  const [sound, setSound] = useState(false);
   const { deepen } = useVoid();
 
   // hold the body still while the menu is summoned
@@ -40,14 +40,6 @@ export default function Chrome() {
     setOpen(false);
     deepen(0.7); // close your eyes between rooms
   }, [deepen]);
-
-  const toggleSound = () => {
-    setSound((s) => {
-      const next = !s;
-      document.dispatchEvent(new CustomEvent("sensorium:sound", { detail: { on: next } }));
-      return next;
-    });
-  };
 
   return (
     <>
@@ -90,17 +82,7 @@ export default function Chrome() {
         )}
       </AnimatePresence>
 
-      <button
-        type="button"
-        className={styles.sound}
-        aria-pressed={sound}
-        onClick={toggleSound}
-      >
-        <span className={styles.wave} aria-hidden>
-          <i /><i /><i />
-        </span>
-        Sound
-      </button>
+      <SoundToggle />
     </>
   );
 }
