@@ -103,13 +103,13 @@
 
 .word {
   font-family: var(--font-memory);
-  /* smaller, more considered — a thought, not a billboard */
-  font-size: clamp(2.25rem, 1.4rem + 4vw, 4.25rem);
-  line-height: 1.02;
+  /* one line, always — scales with the viewport so it never wraps */
+  font-size: clamp(1.25rem, 6vw, 3.25rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
+  white-space: nowrap;
   color: var(--color-bone-100);
   text-shadow: var(--halo-accent);
-  max-width: 18ch;
 }
 /* once it has formed, it breathes — quietly alive, never still */
 .hero[data-developed="true"] .word {

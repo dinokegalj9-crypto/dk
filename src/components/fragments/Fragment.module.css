@@ -58,13 +58,40 @@
   .featuredLink { grid-template-columns: 0.92fr 1fr; gap: clamp(2rem, 5vw, 5rem); }
 }
 
+.vessel { position: relative; width: 100%; }
+/* a soft halo behind the vessel, breathing in its own light */
+.glow {
+  position: absolute;
+  inset: -6% -2%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(closest-side, var(--tone), transparent 70%);
+  opacity: 0.14;
+  filter: blur(50px);
+  animation: vessel-glow 8s ease-in-out infinite;
+}
 .shot {
   position: relative;
+  z-index: 1;
   width: 100%;
   aspect-ratio: 4 / 5;
   /* the vessel emerges from the Void — edges feather into the dark */
   -webkit-mask-image: radial-gradient(80% 80% at 50% 46%, #000 58%, transparent 100%);
   mask-image: radial-gradient(80% 80% at 50% 46%, #000 58%, transparent 100%);
+  /* alive at rest — it drifts, the way a held breath does */
+  animation: vessel-float 9s ease-in-out infinite;
+}
+@keyframes vessel-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes vessel-glow {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.22; transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shot { animation: none; }
+  .glow { animation: none; opacity: 0.14; }
 }
 .shotImg {
   object-fit: cover;

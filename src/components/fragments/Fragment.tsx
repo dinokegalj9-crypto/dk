@@ -51,19 +51,22 @@ export default function Fragment({ fragrance: f }: { fragrance: Fragrance }) {
           href={`/fragrance/${f.slug}`}
           aria-label={`Chapter ${f.chapterNumeral}, Fragment ${f.fragmentNumeral} — ${f.name}`}
         >
-          <div className={styles.shot}>
-            {f.image ? (
-              <Image
-                src={f.image}
-                alt={`${f.name}, Fragment ${f.fragmentNumeral} — a faceted crystal vessel lit amber on dark stone, like a shard of memory held to the light.`}
-                fill
-                sizes="(max-width: 52rem) 84vw, 40vw"
-                className={styles.shotImg}
-                priority
-              />
-            ) : (
-              <div className={styles.placeholder} />
-            )}
+          <div className={styles.vessel}>
+            <span className={styles.glow} aria-hidden />
+            <div className={styles.shot}>
+              {f.image ? (
+                <Image
+                  src={f.image}
+                  alt={`${f.name}, Fragment ${f.fragmentNumeral} — a faceted crystal vessel lit amber on dark stone, like a shard of memory held to the light.`}
+                  fill
+                  sizes="(max-width: 52rem) 84vw, 40vw"
+                  className={styles.shotImg}
+                  priority
+                />
+              ) : (
+                <div className={styles.placeholder} />
+              )}
+            </div>
           </div>
           <div className={styles.meta}>
             {hierarchy}

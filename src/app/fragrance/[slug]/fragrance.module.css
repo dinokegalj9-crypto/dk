@@ -16,17 +16,45 @@
   .hero { grid-template-columns: 1fr 1fr; }
 }
 
-.shot {
+.vessel {
   position: relative;
   width: 100%;
   max-width: 30rem;
   margin-inline: auto;
+}
+.glow {
+  position: absolute;
+  inset: -6% -2%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(closest-side, var(--accent), transparent 70%);
+  opacity: 0.14;
+  filter: blur(54px);
+  animation: vessel-glow 8s ease-in-out infinite;
+}
+.shot {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   aspect-ratio: 4 / 5;
   /* the vessel rises out of the dark — edges feather into the Void */
   -webkit-mask-image: radial-gradient(82% 82% at 50% 46%, #000 56%, transparent 100%);
   mask-image: radial-gradient(82% 82% at 50% 46%, #000 56%, transparent 100%);
+  animation: vessel-float 9s ease-in-out infinite;
 }
 .shotImg { object-fit: contain; }
+@keyframes vessel-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes vessel-glow {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.22; transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shot { animation: none; }
+  .glow { animation: none; opacity: 0.14; }
+}
 
 .intro { display: grid; gap: 1.25rem; }
 .hier { display: grid; gap: 0.5rem; justify-items: start; }

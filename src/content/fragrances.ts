@@ -40,9 +40,8 @@ export const fragrances: Fragrance[] = [
     currency: "GBP",
     keep: {
       mode: "available",
-      note: "An edition of 500, each numbered by hand. The first fragment of Chapter I.",
+      note: "The first fragment of Chapter I, in Extrait de Parfum.",
     },
-    edition: "An edition of 500",
   },
   {
     status: "forthcoming",
