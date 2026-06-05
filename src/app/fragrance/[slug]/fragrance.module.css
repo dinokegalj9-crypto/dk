@@ -19,7 +19,7 @@
 .vessel {
   position: relative;
   width: 100%;
-  max-width: 30rem;
+  max-width: 36rem;
   margin-inline: auto;
 }
 .glow {
@@ -36,13 +36,13 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  /* the vessel rises out of the dark — edges feather into the Void */
-  -webkit-mask-image: radial-gradient(82% 82% at 50% 46%, #000 56%, transparent 100%);
-  mask-image: radial-gradient(82% 82% at 50% 46%, #000 56%, transparent 100%);
+  aspect-ratio: 3 / 4; /* matches the cinematic scenes */
+  /* the scene dissolves into the Void only at its very edges */
+  -webkit-mask-image: radial-gradient(96% 96% at 50% 48%, #000 72%, transparent 100%);
+  mask-image: radial-gradient(96% 96% at 50% 48%, #000 72%, transparent 100%);
   animation: vessel-float 9s ease-in-out infinite;
 }
-.shotImg { object-fit: contain; }
+.shotImg { object-fit: cover; }
 @keyframes vessel-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-12px); }

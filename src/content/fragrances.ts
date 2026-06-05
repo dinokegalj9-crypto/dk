@@ -19,6 +19,7 @@ export const fragrances: Fragrance[] = [
     collection: "memory",
     tone: "#c1875c",
     image: "/media/memorium.png",
+    scene: "/media/memorium-scene.png",
     state: "The first memory — the one that made you, that you can no longer tell from a dream.",
     unfolding: [
       "It arrives the way memory does: out of order, half-lit, certain. A warmth you can't place. A safety you've been trying to return to ever since.",
@@ -52,6 +53,7 @@ export const fragrances: Fragrance[] = [
     collection: "dream",
     tone: "#9070b8",
     image: "/media/somnium.png",
+    scene: "/media/somnium-scene.jpg",
     state: "The dream you almost kept, dissolving the instant you reached for it.",
     unfolding: [
       "It comes on soft and unreal — lavender dusk, skin warm under heavy air, the logic of sleep where nothing needs explaining.",
@@ -85,6 +87,7 @@ export const fragrances: Fragrance[] = [
     collection: "light",
     tone: "#5f86b8",
     image: "/media/lucentia.png",
+    scene: "/media/lucentia-scene.png",
     state: "The first light through the curtains, before you remember who you are.",
     unfolding: [
       "A clean brightness, cool then warming — dawn on skin, the brief mercy before the day arrives and asks anything of you.",
@@ -118,6 +121,7 @@ export const fragrances: Fragrance[] = [
     collection: "night",
     tone: "#4f9079",
     image: "/media/noxivm.png",
+    scene: "/media/noxivm-scene.png",
     state: "The hour after midnight when the self you hide comes to the surface.",
     unfolding: [
       "Dark and resinous, a little dangerous — incense in an empty room, smoke that seems to know your secrets.",

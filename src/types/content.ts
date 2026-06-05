@@ -48,6 +48,8 @@ interface FragmentBase {
   /** The state, stated as if you already know it. */
   state: string;
   image?: string;
+  /** A cinematic "film-still" of the vessel — used large on its page. */
+  scene?: string;
 }
 
 /** A released fragment — fully realised, navigable, purchasable. */

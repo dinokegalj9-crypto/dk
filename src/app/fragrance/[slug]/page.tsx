@@ -52,12 +52,12 @@ export default async function FragrancePage({
         <div className={styles.vessel}>
           <span className={styles.glow} aria-hidden />
           <div className={styles.shot}>
-            {f.image ? (
+            {(f.scene ?? f.image) ? (
               <Image
-                src={f.image}
-                alt={`${f.name}, Fragment ${f.fragmentNumeral} — a faceted crystal vessel lit amber on dark stone.`}
+                src={f.scene ?? f.image!}
+                alt={`${f.name}, Fragment ${f.fragmentNumeral} — the faceted vessel amid smoke and light, fragments of glass suspended in the dark.`}
                 fill
-                sizes="(max-width: 60rem) 86vw, 44vw"
+                sizes="(max-width: 60rem) 88vw, 46vw"
                 className={styles.shotImg}
                 priority
               />
