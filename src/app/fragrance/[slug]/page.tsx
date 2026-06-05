@@ -49,21 +49,23 @@ export default async function FragrancePage({
 
       {/* the vessel + the hierarchy — Chapter → Fragment → Name */}
       <section className={styles.hero}>
-        <div className={styles.vessel}>
-          <span className={styles.glow} aria-hidden />
-          <div className={styles.shot}>
-            {(f.scene ?? f.image) ? (
-              <Image
-                src={f.scene ?? f.image!}
-                alt={`${f.name}, Fragment ${f.fragmentNumeral} — the faceted vessel amid smoke and light, fragments of glass suspended in the dark.`}
-                fill
-                sizes="(max-width: 60rem) 88vw, 46vw"
-                className={styles.shotImg}
-                priority
-              />
-            ) : null}
+        <Surface>
+          <div className={styles.vessel}>
+            <span className={styles.glow} aria-hidden />
+            <div className={styles.shot}>
+              {(f.scene ?? f.image) ? (
+                <Image
+                  src={f.scene ?? f.image!}
+                  alt={`${f.name}, Fragment ${f.fragmentNumeral} — the faceted vessel amid smoke and light, fragments of glass suspended in the dark.`}
+                  fill
+                  sizes="(max-width: 60rem) 88vw, 46vw"
+                  className={styles.shotImg}
+                  priority
+                />
+              ) : null}
+            </div>
           </div>
-        </div>
+        </Surface>
 
         <div className={styles.intro}>
           <Surface>

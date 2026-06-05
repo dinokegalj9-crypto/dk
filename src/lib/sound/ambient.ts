@@ -1,25 +1,41 @@
 /* =====================================================================
    SENSORIUM — AMBIENT SOUND ENGINE (doc 04 §6 / doc 11 §B7)
-   A synthesised dark-fantasy bed, not a file. A deep C-minor drone with
-   a minor 7th and a longing minor 6th, spread across octaves so the
-   tones stay distinct; gritty saw voices through a low moving filter; a
-   breath of wind (filtered noise); a distant eerie shimmer that bypasses
-   the dark filter; and a long, dim reverb. Each voice swells on its own
-   slow LFO, so individual tones drift forward and back — felt as a
-   shifting, brooding chord rather than one fused note.
+   A synthesised, peaceful dark-fantasy piece — in the spirit of a
+   lilting harpsichord waltz (à la "Golden Brown") but darker, calmer
+   and dreamlike: a slow music-box / harp arpeggio over an A-minor
+   progression (Am – Dm – E – Am, the major-V giving that baroque,
+   fantasy colour), floating on a soft pedal drone with long reverb.
 
-   Opt-in, gesture-gated (autoplay policy), click-free gain ramps,
-   compressor on the master, and the context suspends when off.
+   Opt-in, gesture-gated, click-free gain ramps, compressor on the
+   master, and the context suspends when off. Nothing is a file.
    ===================================================================== */
 
-const TARGET_GAIN = 0.55; // master level when on (a touch quieter)
+const TARGET_GAIN = 0.34; // master level when on (kept low — felt, not loud)
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let built = false;
 let suspendTimer: ReturnType<typeof setTimeout> | null = null;
 
-/** Brown noise — soft, like distant air / wind in a vast dark hall. */
+// arpeggio scheduler
+let arpFilter: BiquadFilterNode | null = null;
+let arpBus: GainNode | null = null;
+let schedTimer: ReturnType<typeof setInterval> | null = null;
+let nextNoteTime = 0;
+let step = 0;
+
+const NOTE = 0.36; // seconds per note — slow, peaceful
+// Am – Dm – E – Am, each a gentle rocking arpeggio (6 notes, up then down)
+const A3 = 220.0, C4 = 261.63, E4 = 329.63, A4 = 440.0;
+const D4 = 293.66, F4 = 349.23, D5 = 587.33;
+const Gs4 = 415.3, B4 = 493.88, E5 = 659.25;
+const SEQ: number[] = [
+  A3, C4, E4, A4, E4, C4, // Am
+  D4, F4, A4, D5, A4, F4, // Dm
+  E4, Gs4, B4, E5, B4, Gs4, // E  (the fantasy colour)
+  A3, C4, E4, A4, E4, C4, // Am
+];
+
 function brownNoiseBuffer(ac: AudioContext, seconds: number): AudioBuffer {
   const len = Math.floor(ac.sampleRate * seconds);
   const buf = ac.createBuffer(1, len, ac.sampleRate);
@@ -33,8 +49,7 @@ function brownNoiseBuffer(ac: AudioContext, seconds: number): AudioBuffer {
   return buf;
 }
 
-/** A long, dim reverb tail. */
-function impulse(ac: AudioContext, seconds = 4.2, decay = 3): AudioBuffer {
+function impulse(ac: AudioContext, seconds = 4.6, decay = 3): AudioBuffer {
   const len = Math.floor(ac.sampleRate * seconds);
   const buf = ac.createBuffer(2, len, ac.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
@@ -46,19 +61,6 @@ function impulse(ac: AudioContext, seconds = 4.2, decay = 3): AudioBuffer {
   return buf;
 }
 
-/** Gentle analog-ish saturation — warmth and a little grit (darker). */
-function softCurve(k: number) {
-  const n = 1024;
-  const curve = new Float32Array(new ArrayBuffer(n * 4));
-  const d = Math.tanh(k);
-  for (let i = 0; i < n; i++) {
-    const x = (i / (n - 1)) * 2 - 1;
-    curve[i] = Math.tanh(k * x) / d;
-  }
-  return curve;
-}
-
-/** A slow control oscillator modulating an AudioParam (swell / movement). */
 function startLfo(ac: AudioContext, rate: number, depth: number, param: AudioParam) {
   const lfo = ac.createOscillator();
   lfo.frequency.value = rate;
@@ -72,8 +74,7 @@ interface Voice {
   f: number;
   type: OscillatorType;
   g: number;
-  lfo: number; // per-voice swell rate (Hz)
-  thick?: boolean; // detuned pair for body
+  thick?: boolean;
 }
 
 function build(ac: AudioContext) {
@@ -92,98 +93,134 @@ function build(ac: AudioContext) {
   master.connect(comp);
   comp.connect(ac.destination);
 
-  // a slow breath swells the whole bed
   const breath = ac.createGain();
-  breath.gain.value = 0.82;
+  breath.gain.value = 0.85;
   breath.connect(master);
-  startLfo(ac, 0.05, 0.12, breath.gain);
+  startLfo(ac, 0.05, 0.1, breath.gain);
 
-  // mix points
   const dry = ac.createGain();
-  dry.gain.value = 0.82;
+  dry.gain.value = 0.85;
   dry.connect(breath);
   const wet = ac.createGain();
-  wet.gain.value = 0.55;
+  wet.gain.value = 0.6;
   wet.connect(breath);
   const conv = ac.createConvolver();
   conv.buffer = impulse(ac);
   conv.connect(wet);
 
-  // the dark path: drone bus -> saturation -> a low filter that drifts
-  const bus = ac.createGain();
-  bus.gain.value = 1;
-  const shaper = ac.createWaveShaper();
-  shaper.curve = softCurve(1.7);
-  shaper.oversample = "2x";
-  const tone = ac.createBiquadFilter();
-  tone.type = "lowpass";
-  tone.frequency.value = 700;
-  tone.Q.value = 0.7;
-  bus.connect(shaper);
-  shaper.connect(tone);
-  tone.connect(dry);
-  tone.connect(conv);
-  startLfo(ac, 0.025, 300, tone.frequency); // movement: cutoff ~400–1000
+  // --- the soft pedal drone (A minor), low and warm ---
+  const droneBus = ac.createGain();
+  droneBus.gain.value = 1;
+  const droneTone = ac.createBiquadFilter();
+  droneTone.type = "lowpass";
+  droneTone.frequency.value = 620;
+  droneTone.Q.value = 0.6;
+  droneBus.connect(droneTone);
+  droneTone.connect(dry);
+  droneTone.connect(conv);
+  startLfo(ac, 0.024, 220, droneTone.frequency);
 
-  // the dark chord — C minor add♭6/♭7, spread across octaves so the
-  // tones stay distinct, and pitched up enough to survive phone speakers
   const voices: Voice[] = [
-    { f: 32.7, type: "sine", g: 0.06, lfo: 0.017 }, // C1 sub — depth (headphones)
-    { f: 65.41, type: "sawtooth", g: 0.045, lfo: 0.023, thick: true }, // C2 root
-    { f: 130.81, type: "sawtooth", g: 0.05, lfo: 0.031, thick: true }, // C3 — audible root
-    { f: 155.56, type: "sawtooth", g: 0.045, lfo: 0.019 }, // Eb3 — the dark minor 3rd
-    { f: 196.0, type: "sawtooth", g: 0.04, lfo: 0.037 }, // G3 — fifth
-    { f: 233.08, type: "triangle", g: 0.034, lfo: 0.027 }, // Bb3 — minor 7th (brooding)
-    { f: 311.13, type: "triangle", g: 0.026, lfo: 0.043 }, // Eb4 — high color, distinct
+    { f: 55.0, type: "sine", g: 0.05 }, // A1 sub
+    { f: 110.0, type: "sawtooth", g: 0.03, thick: true }, // A2
+    { f: 164.81, type: "sawtooth", g: 0.026 }, // E3 (fifth)
+    { f: 220.0, type: "sawtooth", g: 0.026, thick: true }, // A3
+    { f: 261.63, type: "triangle", g: 0.02 }, // C4 (minor third — dark)
   ];
   for (const v of voices) {
     const vg = ac.createGain();
     vg.gain.value = v.g;
-    vg.connect(bus);
-    // independent swell so this tone drifts forward and back on its own
-    startLfo(ac, v.lfo, v.g * 0.62, vg.gain);
-    const detunes = v.thick ? [-6, 6] : [0];
-    for (const d of detunes) {
+    vg.connect(droneBus);
+    for (const d of v.thick ? [-5, 5] : [0]) {
       const o = ac.createOscillator();
       o.type = v.type;
       o.frequency.value = v.f;
-      o.detune.value = d + (Math.random() * 4 - 2); // gentle beating
+      o.detune.value = d + (Math.random() * 3 - 1.5);
       o.connect(vg);
       o.start();
     }
   }
 
-  // a distant, eerie high shimmer — bypasses the dark filter so it stays
-  // present (the "fantasy" glint above the gloom)
-  const shimmer = ac.createGain();
-  shimmer.gain.value = 0.015;
-  shimmer.connect(dry);
-  shimmer.connect(conv);
-  startLfo(ac, 0.07, 0.011, shimmer.gain);
-  for (const f of [466.16, 622.25]) {
-    // Bb4, Eb5
-    const o = ac.createOscillator();
-    o.type = "sine";
-    o.frequency.value = f;
-    o.detune.value = Math.random() * 6 - 3;
-    o.connect(shimmer);
-    o.start();
-  }
-
-  // wind — filtered brown noise beneath it all
+  // air
   const noise = ac.createBufferSource();
   noise.buffer = brownNoiseBuffer(ac, 4);
   noise.loop = true;
   const nf = ac.createBiquadFilter();
   nf.type = "lowpass";
-  nf.frequency.value = 520;
+  nf.frequency.value = 480;
   const ng = ac.createGain();
-  ng.gain.value = 0.055;
-  noise.connect(nf).connect(ng).connect(bus);
+  ng.gain.value = 0.045;
+  noise.connect(nf).connect(ng).connect(droneBus);
   noise.start();
+
+  // --- the arpeggio path (soft harp / music box) ---
+  arpFilter = ac.createBiquadFilter();
+  arpFilter.type = "lowpass";
+  arpFilter.frequency.value = 2000; // soft, darker than a true harpsichord
+  arpFilter.Q.value = 0.4;
+  arpBus = ac.createGain();
+  arpBus.gain.value = 0.9;
+  arpFilter.connect(arpBus);
+  arpBus.connect(dry);
+  arpBus.connect(conv); // plenty of reverb — dreamy
 }
 
-/** Turn the bed on (must be called from a user gesture). */
+/** One plucked note: fast attack, gentle decay — a music-box tone. */
+function playPluck(time: number, freq: number, vel: number) {
+  if (!ctx || !arpFilter) return;
+  const peak = 0.13 * vel;
+
+  const o = ctx.createOscillator();
+  o.type = "triangle";
+  o.frequency.value = freq;
+  const env = ctx.createGain();
+  env.gain.value = 0.0001;
+  o.connect(env).connect(arpFilter);
+  env.gain.setValueAtTime(0.0001, time);
+  env.gain.exponentialRampToValueAtTime(peak, time + 0.014);
+  env.gain.exponentialRampToValueAtTime(0.0001, time + 1.7);
+  o.start(time);
+  o.stop(time + 1.8);
+
+  // a soft octave shimmer above it
+  const o2 = ctx.createOscillator();
+  o2.type = "sine";
+  o2.frequency.value = freq * 2;
+  const env2 = ctx.createGain();
+  env2.gain.value = 0.0001;
+  o2.connect(env2).connect(arpFilter);
+  env2.gain.setValueAtTime(0.0001, time);
+  env2.gain.exponentialRampToValueAtTime(peak * 0.28, time + 0.02);
+  env2.gain.exponentialRampToValueAtTime(0.0001, time + 1.1);
+  o2.start(time);
+  o2.stop(time + 1.2);
+}
+
+function scheduler() {
+  if (!ctx) return;
+  const ahead = 0.12;
+  while (nextNoteTime < ctx.currentTime + ahead) {
+    const vel = step % 6 === 0 ? 1.15 : 0.78; // gentle lilt on the downbeat
+    playPluck(nextNoteTime, SEQ[step % SEQ.length], vel);
+    nextNoteTime += NOTE;
+    step++;
+  }
+}
+
+function startScheduler() {
+  if (schedTimer || !ctx) return;
+  nextNoteTime = ctx.currentTime + 0.15;
+  schedTimer = setInterval(scheduler, 25);
+}
+
+function stopScheduler() {
+  if (schedTimer) {
+    clearInterval(schedTimer);
+    schedTimer = null;
+  }
+}
+
+/** Turn the piece on (must be called from a user gesture). */
 export async function enableAmbient(): Promise<void> {
   const AC: typeof AudioContext | undefined =
     window.AudioContext ??
@@ -200,22 +237,24 @@ export async function enableAmbient(): Promise<void> {
   } catch {
     /* ignore */
   }
+  startScheduler();
   if (!master) return;
   const now = ctx.currentTime;
   master.gain.cancelScheduledValues(now);
   master.gain.setValueAtTime(master.gain.value, now);
-  master.gain.linearRampToValueAtTime(TARGET_GAIN, now + 3); // fade in, no click
+  master.gain.linearRampToValueAtTime(TARGET_GAIN, now + 3);
 }
 
 /** Fade out and, once silent, suspend the context to save battery. */
 export function disableAmbient(): void {
   if (!ctx || !master) return;
+  stopScheduler();
   const now = ctx.currentTime;
   master.gain.cancelScheduledValues(now);
   master.gain.setValueAtTime(master.gain.value, now);
-  master.gain.linearRampToValueAtTime(0, now + 1.6);
+  master.gain.linearRampToValueAtTime(0, now + 1.8);
   if (suspendTimer) clearTimeout(suspendTimer);
   suspendTimer = setTimeout(() => {
     ctx?.suspend().catch(() => {});
-  }, 1900);
+  }, 2100);
 }
