@@ -68,7 +68,9 @@
   color: var(--text-faint);
 }
 
-.featured { margin-top: clamp(4rem, 10vh, 8rem); }
+/* generous breathing room between fragments — they are not a list */
+.featured { margin-top: clamp(8rem, 22vh, 18rem); }
+.featured:first-of-type { margin-top: clamp(5rem, 12vh, 9rem); }
 
 .forthcomingHead {
   margin-top: clamp(5rem, 12vh, 9rem);

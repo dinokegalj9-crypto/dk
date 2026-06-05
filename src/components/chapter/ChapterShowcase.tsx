@@ -53,9 +53,7 @@ export default function ChapterShowcase({ chapter, fragments, as: Heading = "h2"
       <div className={styles.inner}>
         {released.map((f, i) => (
           <div key={f.slug} className={styles.featured}>
-            <Surface>
-              <Fragment fragrance={f} index={i} />
-            </Surface>
+            <Fragment fragrance={f} index={i} />
           </div>
         ))}
 

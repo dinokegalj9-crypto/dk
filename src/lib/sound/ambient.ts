@@ -12,7 +12,7 @@
    compressor on the master, and the context suspends when off.
    ===================================================================== */
 
-const TARGET_GAIN = 0.8;
+const TARGET_GAIN = 0.55; // master level when on (a touch quieter)
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;

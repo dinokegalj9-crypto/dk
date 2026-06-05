@@ -10,11 +10,8 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { animate, useMotionValue } from "framer-motion";
 import { VoidContext, type VoidControls, type VoidQuality } from "@/lib/void";
-import { dur, ease } from "@/lib/motion";
 import VoidCanvas from "./VoidCanvas";
 import DeepenVeil from "./DeepenVeil";
-
-const bezier = [...ease.surface] as [number, number, number, number];
 
 function prefersReduced(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -30,10 +27,11 @@ export default function VoidSystem({ children }: { children: ReactNode }) {
     (intensity = 1) => {
       if (prefersReduced()) return; // a still Sensorium is still Sensorium
       const peak = Math.max(0, Math.min(1, intensity));
+      // long, symmetric ease-in-out → a slow swell into the dark and back
       animate(deepen, [deepen.get(), peak, 0], {
-        duration: dur.deep * 0.6,
-        times: [0, 0.42, 1],
-        ease: bezier,
+        duration: 2.6,
+        times: [0, 0.5, 1],
+        ease: "easeInOut",
       });
     },
     [deepen],
@@ -44,7 +42,7 @@ export default function VoidSystem({ children }: { children: ReactNode }) {
       const next = name && name !== "default" ? name : "default";
       document.documentElement.setAttribute("data-collection", next);
       setCollectionState(next);
-      triggerDeepen(0.6); // the light changes between rooms, never jumps
+      triggerDeepen(0.4); // scrolling between fragments dims a little, gently
     },
     [triggerDeepen],
   );
