@@ -135,9 +135,13 @@
   position: absolute;
   z-index: 4;
   bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
+  /* centre without a transform — Framer animates transform on entrance,
+     which would otherwise wipe out translateX(-50%) and offset it */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
