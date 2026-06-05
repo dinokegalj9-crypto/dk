@@ -19,12 +19,15 @@ export interface VoidControls {
   setCollection: (name: string | null) => void;
   /** Current adaptive render quality (auto-degrades under load). */
   quality: VoidQuality;
+  /** Tell the Void the ambient sound is on/off — it wakes a starfield. */
+  setSound: (on: boolean) => void;
 }
 
 const noop: VoidControls = {
   deepen: () => {},
   setCollection: () => {},
   quality: "high",
+  setSound: () => {},
 };
 
 export const VoidContext = createContext<VoidControls | null>(null);

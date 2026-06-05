@@ -41,14 +41,23 @@ const QUALITY_SCALE: Record<VoidQuality, number> = { high: 1, medium: 0.66, low:
 interface Props {
   deepen: MotionValue<number>;
   collection: string;
+  /** When true, the Void brightens, multiplies its dots and twinkles —
+   *  a live starfield that comes alive with the sound. */
+  sound: boolean;
   onQuality: (q: VoidQuality) => void;
 }
 
-export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
+export default function VoidCanvas({ deepen, collection, sound, onQuality }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const accentRef = useRef<RGB>([201, 130, 78]);
   const renderStillRef = useRef<(() => void) | null>(null);
+  const soundRef = useRef(false);
+
+  // ---- sound on/off → drives the starfield (read live in the loop) ---
+  useEffect(() => {
+    soundRef.current = sound;
+  }, [sound]);
 
   // ---- collection change → re-resolve accent (retint) ----------------
   useEffect(() => {
@@ -123,9 +132,11 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
       canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // the high-water mote count; quality scales how many we actually draw
+      // the high-water mote count; quality scales how many we actually draw.
+      // we allocate extra so the sound-on starfield has more dots to reveal.
       maxCount = Math.max(14, Math.min(72, Math.round((W * H) / 26000)));
-      motes = Array.from({ length: maxCount }, makeMote);
+      const starMax = Math.max(maxCount, Math.min(180, Math.round(maxCount * 1.9)));
+      motes = Array.from({ length: starMax }, makeMote);
       setActiveFromQuality();
 
       blooms = [
@@ -139,6 +150,7 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
     let px = -9999, py = -9999, smx = -9999, smy = -9999;
     let lastMove = -9999;
     let agitation = 0;
+    let soundBoost = 0; // eases 0→1 when sound is on (the starfield wakes)
     let lastScroll = window.scrollY || 0;
 
     const onMove = (e: PointerEvent) => {
@@ -156,7 +168,13 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
       return v;
     };
 
-    const paintBloomsAndMotes = (t: number, dim: number, dScroll: number, lowQuality: boolean) => {
+    const paintBloomsAndMotes = (
+      t: number,
+      dim: number,
+      dScroll: number,
+      lowQuality: boolean,
+      soundBoost: number,
+    ) => {
       ctx.globalCompositeOperation = "lighter";
       const [ar, ag, ab] = accentRef.current;
 
@@ -165,7 +183,7 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
         const by = (bl.oy + Math.cos(t * bl.sp * 0.8 + bl.ph) * bl.ay) * H;
         const br = bl.r * Math.max(W, H);
         const pulse = 0.6 + 0.4 * Math.sin(t * (0.08 + bl.sp * 0.1) + bl.ph);
-        const ba = bl.a * pulse * dim;
+        const ba = bl.a * pulse * dim * (1 + soundBoost * 0.5);
         const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
         g.addColorStop(0, `rgba(${ar},${ag},${ab},${ba})`);
         g.addColorStop(1, `rgba(${ar},${ag},${ab},0)`);
@@ -185,7 +203,9 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
       }
 
       const tide = Math.sin(t * 0.06) * 0.18;
-      for (let i = 0; i < activeCount; i++) {
+      // sound on → reveal more dots (up to the allocated starfield)
+      const drawCount = Math.min(motes.length, Math.round(activeCount * (1 + soundBoost * 0.95)));
+      for (let i = 0; i < drawCount; i++) {
         const p = motes[i];
         p.x += (p.vx + tide * (0.4 + p.z)) * 1;
         p.y += (p.vy + tide * 0.3) * 1;
@@ -207,8 +227,10 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
         p.x = wrap(p.x, W);
         p.y = wrap(p.y, H);
 
-        const fl = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * p.fs + p.ph));
-        const alpha = p.a * fl * dim;
+        // base drift-flicker, plus a faster twinkle when the sound is on
+        const twinkle = soundBoost > 0.01 ? soundBoost * 0.45 * Math.sin(t * p.fs * 7 + p.ph * 3) : 0;
+        const fl = Math.max(0, 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * p.fs + p.ph)) + twinkle);
+        const alpha = p.a * fl * dim * (1 + soundBoost * 0.6);
         if (alpha <= 0.004) continue;
         const s = p.size;
         ctx.globalAlpha = alpha;
@@ -219,7 +241,7 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
 
     const renderStill = () => {
       ctx.clearRect(0, 0, W, H);
-      paintBloomsAndMotes(0, 0.8, 0, true);
+      paintBloomsAndMotes(0, 0.8, 0, true, 0);
     };
     renderStillRef.current = renderStill;
 
@@ -261,6 +283,7 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
       const t = now * 0.001;
       const active = now - lastMove < 2600 ? 1 : 0;
       agitation += (active - agitation) * 0.02 * dt;
+      soundBoost += ((soundRef.current ? 1 : 0) - soundBoost) * 0.025 * dt;
 
       if (px > -9999) {
         if (smx < -9000) { smx = px; smy = py; }
@@ -277,7 +300,7 @@ export default function VoidCanvas({ deepen, collection, onQuality }: Props) {
       const dim = (0.72 + 0.28 * agitation) * (1 - dz * 0.9);
 
       ctx.clearRect(0, 0, W, H);
-      paintBloomsAndMotes(t, dim, dScroll, quality === "low");
+      paintBloomsAndMotes(t, dim, dScroll, quality === "low", soundBoost);
 
       raf = requestAnimationFrame(frame);
     };

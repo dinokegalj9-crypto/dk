@@ -2,9 +2,10 @@ import type { Fragrance } from "@/types/content";
 
 /* =====================================================================
    CHAPTER I — Origins. Four fragments: Memory, Consciousness, Emotion,
-   Identity — the pieces from which a self is first assembled. For
-   launch only Fragment I (Memorium) is released; the rest are forming.
-   You are not buying a perfume; you are collecting a fragment of a life.
+   Identity — the pieces from which a self is first assembled. You are
+   not buying a perfume; you are collecting a fragment of a life.
+   (Perfumer names, notes and pricing are placeholder pending the real
+   house; the structure is production.)
    ===================================================================== */
 export const fragrances: Fragrance[] = [
   {
@@ -15,7 +16,7 @@ export const fragrances: Fragrance[] = [
     chapterNumeral: "I",
     fragmentNumeral: "I",
     facet: "Memory",
-    collection: "waking",
+    collection: "memory",
     tone: "#c1875c",
     image: "/media/memorium.png",
     state: "The first memory — the one that made you, that you can no longer tell from a dream.",
@@ -38,42 +39,105 @@ export const fragrances: Fragrance[] = [
       { ml: 100, price: 295 },
     ],
     currency: "GBP",
-    keep: {
-      mode: "available",
-      note: "The first fragment of Chapter I, in Extrait de Parfum.",
-    },
+    keep: { mode: "available", note: "The first fragment of Chapter I, in Extrait de Parfum." },
   },
   {
-    status: "forthcoming",
-    slug: "fragment-ii",
+    status: "available",
+    slug: "somnium",
+    name: "Somnium",
     chapterSlug: "i",
     chapterNumeral: "I",
     fragmentNumeral: "II",
     facet: "Consciousness",
-    collection: "submerged",
-    tone: "#6a7f8d",
-    state: "The moment you first knew that you were.",
+    collection: "dream",
+    tone: "#9070b8",
+    image: "/media/somnium.png",
+    state: "The dream you almost kept, dissolving the instant you reached for it.",
+    unfolding: [
+      "It comes on soft and unreal — lavender dusk, skin warm under heavy air, the logic of sleep where nothing needs explaining.",
+      "You wake reaching for it. What stays is only the shape of where it was.",
+    ],
+    perfumer: "Inés Varga",
+    concentration: "Extrait de Parfum · 26%",
+    composition: {
+      opens: ["bergamot", "lavender", "blue chamomile"],
+      becomes: ["iris", "violet", "poppy"],
+      stays: ["orris", "white musk", "blond woods"],
+    },
+    longevity: "7–9 hours",
+    sillage: "intimate",
+    madeIn: "Composed in Grasse",
+    sizes: [
+      { ml: 50, price: 195 },
+      { ml: 100, price: 295 },
+    ],
+    currency: "GBP",
+    keep: { mode: "available", note: "The second fragment of Chapter I, in Extrait de Parfum." },
   },
   {
-    status: "forthcoming",
-    slug: "fragment-iii",
+    status: "available",
+    slug: "lucentia",
+    name: "Lucentia",
     chapterSlug: "i",
     chapterNumeral: "I",
     fragmentNumeral: "III",
     facet: "Emotion",
-    collection: "residue",
-    tone: "#ad7e7a",
-    state: "The first feeling that arrived before you had a word for it.",
+    collection: "light",
+    tone: "#5f86b8",
+    image: "/media/lucentia.png",
+    state: "The first light through the curtains, before you remember who you are.",
+    unfolding: [
+      "A clean brightness, cool then warming — dawn on skin, the brief mercy before the day arrives and asks anything of you.",
+      "It lifts and lingers, luminous, like the after-image of a window held behind closed eyes.",
+    ],
+    perfumer: "Camille Aubert",
+    concentration: "Eau de Parfum · 22%",
+    composition: {
+      opens: ["bergamot", "neroli", "sea salt"],
+      becomes: ["orange blossom", "jasmine", "green fig"],
+      stays: ["white amber", "musk", "cedar"],
+    },
+    longevity: "6–8 hours",
+    sillage: "moderate",
+    madeIn: "Composed in Grasse",
+    sizes: [
+      { ml: 50, price: 185 },
+      { ml: 100, price: 280 },
+    ],
+    currency: "GBP",
+    keep: { mode: "available", note: "The third fragment of Chapter I." },
   },
   {
-    status: "forthcoming",
-    slug: "fragment-iv",
+    status: "available",
+    slug: "noxivm",
+    name: "Noxivm",
     chapterSlug: "i",
     chapterNumeral: "I",
     fragmentNumeral: "IV",
     facet: "Identity",
-    collection: "long-afternoon",
-    tone: "#b6995f",
-    state: "The face in the glass you slowly learned to call your own.",
+    collection: "night",
+    tone: "#4f9079",
+    image: "/media/noxivm.png",
+    state: "The hour after midnight when the self you hide comes to the surface.",
+    unfolding: [
+      "Dark and resinous, a little dangerous — incense in an empty room, smoke that seems to know your secrets.",
+      "It deepens as the night does, and does not let go of you until morning.",
+    ],
+    perfumer: "Inés Varga",
+    concentration: "Extrait de Parfum · 30%",
+    composition: {
+      opens: ["black pepper", "bergamot", "cypress"],
+      becomes: ["incense", "oud", "labdanum"],
+      stays: ["vetiver", "leather", "dark amber"],
+    },
+    longevity: "10–12 hours",
+    sillage: "fills a room",
+    madeIn: "Composed in Grasse",
+    sizes: [
+      { ml: 50, price: 210 },
+      { ml: 100, price: 315 },
+    ],
+    currency: "GBP",
+    keep: { mode: "available", note: "The fourth fragment of Chapter I, in Extrait de Parfum." },
   },
 ];

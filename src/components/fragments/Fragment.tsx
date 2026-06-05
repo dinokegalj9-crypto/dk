@@ -14,7 +14,13 @@ import { useVoid } from "@/lib/void";
 import type { Fragrance } from "@/types/content";
 import styles from "./Fragment.module.css";
 
-export default function Fragment({ fragrance: f }: { fragrance: Fragrance }) {
+export default function Fragment({
+  fragrance: f,
+  index = 0,
+}: {
+  fragrance: Fragrance;
+  index?: number;
+}) {
   const ref = useRef<HTMLElement>(null);
   const { setCollection } = useVoid();
 
@@ -47,7 +53,7 @@ export default function Fragment({ fragrance: f }: { fragrance: Fragrance }) {
     return (
       <article ref={ref} className={styles.featured} style={toneStyle}>
         <Link
-          className={styles.featuredLink}
+          className={`${styles.featuredLink} ${index % 2 === 1 ? styles.flip : ""}`}
           href={`/fragrance/${f.slug}`}
           aria-label={`Chapter ${f.chapterNumeral}, Fragment ${f.fragmentNumeral} — ${f.name}`}
         >

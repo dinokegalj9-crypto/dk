@@ -24,6 +24,7 @@ export default function VoidSystem({ children }: { children: ReactNode }) {
   const deepen = useMotionValue(0);
   const [collection, setCollectionState] = useState("default");
   const [quality, setQuality] = useState<VoidQuality>("high");
+  const [sound, setSoundState] = useState(false);
 
   const triggerDeepen = useCallback(
     (intensity = 1) => {
@@ -48,14 +49,16 @@ export default function VoidSystem({ children }: { children: ReactNode }) {
     [triggerDeepen],
   );
 
+  const setSound = useCallback((on: boolean) => setSoundState(on), []);
+
   const controls = useMemo<VoidControls>(
-    () => ({ deepen: triggerDeepen, setCollection, quality }),
-    [triggerDeepen, setCollection, quality],
+    () => ({ deepen: triggerDeepen, setCollection, quality, setSound }),
+    [triggerDeepen, setCollection, quality, setSound],
   );
 
   return (
     <VoidContext.Provider value={controls}>
-      <VoidCanvas deepen={deepen} collection={collection} onQuality={setQuality} />
+      <VoidCanvas deepen={deepen} collection={collection} sound={sound} onQuality={setQuality} />
       <div className="void-content">{children}</div>
       <DeepenVeil deepen={deepen} />
     </VoidContext.Provider>

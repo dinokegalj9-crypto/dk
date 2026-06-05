@@ -7,18 +7,23 @@
    ===================================================================== */
 import { useEffect, useState } from "react";
 import { disableAmbient, enableAmbient } from "@/lib/sound/ambient";
+import { useVoid } from "@/lib/void";
 import styles from "./chrome.module.css";
 
 const KEY = "sensorium:sound";
 
 export default function SoundToggle() {
   const [on, setOn] = useState(false);
+  const { setSound } = useVoid();
 
   // restore the preference — resume on the first gesture (autoplay policy)
   useEffect(() => {
     if (localStorage.getItem(KEY) !== "on") return;
     const resume = () => {
-      void enableAmbient().then(() => setOn(true));
+      void enableAmbient().then(() => {
+        setOn(true);
+        setSound(true); // wake the starfield
+      });
       window.removeEventListener("pointerdown", resume);
       window.removeEventListener("keydown", resume);
     };
@@ -28,16 +33,18 @@ export default function SoundToggle() {
       window.removeEventListener("pointerdown", resume);
       window.removeEventListener("keydown", resume);
     };
-  }, []);
+  }, [setSound]);
 
   const toggle = async () => {
     if (on) {
       disableAmbient();
       setOn(false);
+      setSound(false);
       localStorage.setItem(KEY, "off");
     } else {
       await enableAmbient();
       setOn(true);
+      setSound(true);
       localStorage.setItem(KEY, "on");
     }
   };

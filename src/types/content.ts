@@ -11,7 +11,7 @@
    to a larger story the customer is assembling.
    ===================================================================== */
 
-export type Collection = "waking" | "submerged" | "residue" | "long-afternoon";
+export type Collection = "memory" | "dream" | "light" | "night";
 export type Facet = "Memory" | "Consciousness" | "Emotion" | "Identity";
 export type FragmentStatus = "available" | "forthcoming";
 

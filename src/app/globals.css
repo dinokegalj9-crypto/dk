@@ -25,12 +25,12 @@
   --color-ash-500: #6b655c;
   --color-ash-600: #4a463f;
 
-  /* Ember — one accent per collection, used as LIGHT not fill.
-     Ashen and dusted, never saccharine — luxury is desaturated. */
-  --color-ember-amber: #c1875c;
-  --color-ember-rose: #ad7e7a;
-  --color-ember-dusk: #6a7f8d;
-  --color-ember-gold: #b6995f;
+  /* Ember — one accent per fragment, used as LIGHT not fill. Each is
+     drawn from its vessel's glass, ashen and dusted, never saccharine. */
+  --color-ember-amber: #c1875c; /* Memorium — memory */
+  --color-ember-violet: #9070b8; /* Somnium — dream */
+  --color-ember-azure: #5f86b8; /* Lucentia — light */
+  --color-ember-verdant: #4f9079; /* Noxivm — night */
 
   /* The two voices */
   --font-memory: "EB Garamond", "Hoefler Text", Garamond, "Times New Roman", serif;
@@ -76,12 +76,11 @@
   --grain-opacity: 0.045;
 }
 
-/* Per-collection accent retint */
-[data-collection="waking"] { --accent: var(--color-ember-amber); }
-[data-collection="submerged"] { --accent: var(--color-ember-dusk); }
-[data-collection="residue"] { --accent: var(--color-ember-rose); }
-[data-collection="after-you-left"] { --accent: var(--color-ember-rose); }
-[data-collection="long-afternoon"] { --accent: var(--color-ember-gold); }
+/* Per-fragment accent retint — the Void takes each vessel's light */
+[data-collection="memory"] { --accent: var(--color-ember-amber); }
+[data-collection="dream"] { --accent: var(--color-ember-violet); }
+[data-collection="light"] { --accent: var(--color-ember-azure); }
+[data-collection="night"] { --accent: var(--color-ember-verdant); }
 
 /* =====================================================================
    BASE — the atmospheric ground + the living grain + vignette
