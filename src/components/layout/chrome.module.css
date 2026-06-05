@@ -12,20 +12,29 @@
   align-items: center;
   justify-content: space-between;
   padding: clamp(1.25rem, 3vw, 2rem) var(--gutter);
-  mix-blend-mode: difference; /* legible over any ground */
+}
+/* a controlled scrim for legibility — never a blend-mode gamble */
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(6, 5, 4, 0.55), transparent);
+  pointer-events: none;
 }
 .mark {
   font-family: var(--font-memory);
   font-size: var(--text-subhead);
-  letter-spacing: 0.04em;
-  color: #fff;
+  letter-spacing: 0.02em;
+  color: var(--color-bone-100);
+  text-shadow: 0 1px 20px rgba(6, 5, 4, 0.6);
 }
 .summon {
   display: inline-flex;
   flex-direction: column;
   gap: 5px;
   padding: 0.5rem;
-  color: #fff;
+  color: var(--color-bone-200);
 }
 .summon span {
   width: 26px;

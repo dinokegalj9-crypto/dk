@@ -41,28 +41,55 @@
   border-radius: 2px;
   overflow: hidden;
   /* edges dissolve into the Void — the mind completes the rest */
-  -webkit-mask-image: radial-gradient(120% 120% at 50% 45%, #000 52%, transparent 100%);
-  mask-image: radial-gradient(120% 120% at 50% 45%, #000 52%, transparent 100%);
+  -webkit-mask-image: radial-gradient(125% 125% at 50% 42%, #000 48%, transparent 100%);
+  mask-image: radial-gradient(125% 125% at 50% 42%, #000 48%, transparent 100%);
+  /* an interior that looks photographed, not filled: deep vignette */
+  box-shadow:
+    inset 0 0 90px 12px rgba(6, 5, 4, 0.72),
+    inset 0 -50px 70px -24px rgba(6, 5, 4, 0.66);
 }
+/* grain over the image, dissolving with the edges */
+.image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
 .imageInner {
   position: absolute;
   inset: 0;
-  transform: scale(1.02);
-  filter: grayscale(0.15) brightness(0.9) contrast(1.02);
+  transform: scale(1.03);
+  /* a lit atmospheric field: soft key light, a counter-mass of dark,
+     a graded tonal base — an out-of-focus photograph of a state */
+  background:
+    radial-gradient(58% 52% at 34% 26%,
+      color-mix(in oklab, var(--tone) 70%, #ece4d6) 0%, transparent 60%),
+    radial-gradient(96% 92% at 74% 86%, #050403 0%, transparent 58%),
+    radial-gradient(120% 90% at 12% 96%,
+      color-mix(in oklab, var(--tone) 36%, #0b0a09) 0%, transparent 62%),
+    linear-gradient(154deg,
+      color-mix(in oklab, var(--tone) 40%, #0b0a09) 0%, #070605 74%);
+  background-blend-mode: screen, normal, normal, normal;
+  filter: contrast(1.05) brightness(0.92) saturate(0.86);
   transition:
     transform var(--breath-deep) var(--ease-surface),
     filter var(--breath-slow) var(--ease-surface);
 }
 .fragment:hover .imageInner {
-  transform: scale(1.06);
-  filter: grayscale(0) brightness(1) contrast(1.05);
+  transform: scale(1.08);
+  filter: contrast(1.08) brightness(1.02) saturate(1);
 }
 
 .meta { display: grid; gap: 0.5rem; }
 .name {
   font-family: var(--font-memory);
   font-size: var(--text-headline);
-  line-height: 1.02;
+  line-height: 1.0;
+  letter-spacing: -0.015em;
   color: var(--color-bone-100);
 }
 .state {

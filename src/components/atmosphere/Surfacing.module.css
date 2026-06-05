@@ -26,11 +26,13 @@
   position: absolute;
   inset: -6%;
   z-index: 1;
+  /* light through a thin curtain, not a coloured blob: a warm-bone key
+     desaturated toward white, a cool counter, the faintest slats */
   background:
-    radial-gradient(46% 62% at var(--light-x) var(--light-y),
-      rgba(201, 130, 78, 0.55), rgba(183, 110, 108, 0.18) 38%, transparent 72%),
-    radial-gradient(60% 80% at 18% 88%, rgba(94, 117, 136, 0.2), transparent 60%),
-    repeating-linear-gradient(94deg, transparent 0 26px, rgba(237, 231, 221, 0.018) 26px 28px);
+    radial-gradient(54% 66% at var(--light-x) var(--light-y),
+      rgba(214, 188, 160, 0.4), rgba(193, 135, 92, 0.14) 34%, transparent 70%),
+    radial-gradient(72% 92% at 15% 90%, rgba(106, 127, 141, 0.14), transparent 58%),
+    repeating-linear-gradient(92deg, transparent 0 32px, rgba(237, 231, 221, 0.012) 32px 35px);
   background-blend-mode: screen, screen, overlay;
 }
 
@@ -102,11 +104,11 @@
 .word {
   font-family: var(--font-memory);
   font-size: var(--text-display-xl);
-  line-height: 0.98;
-  letter-spacing: -0.01em;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
   color: var(--color-bone-100);
   text-shadow: var(--halo-accent);
-  max-width: 16ch;
+  max-width: 15ch;
 }
 .word span { display: inline-block; white-space: pre; }
 

@@ -25,21 +25,23 @@
   --color-ash-500: #6b655c;
   --color-ash-600: #4a463f;
 
-  /* Ember — one warm accent per collection, used as light not fill */
-  --color-ember-amber: #c9824e;
-  --color-ember-rose: #b66e6c;
-  --color-ember-dusk: #5e7588;
-  --color-ember-gold: #c7a352;
+  /* Ember — one accent per collection, used as LIGHT not fill.
+     Ashen and dusted, never saccharine — luxury is desaturated. */
+  --color-ember-amber: #c1875c;
+  --color-ember-rose: #ad7e7a;
+  --color-ember-dusk: #6a7f8d;
+  --color-ember-gold: #b6995f;
 
   /* The two voices */
   --font-memory: "EB Garamond", "Hoefler Text", Garamond, "Times New Roman", serif;
   --font-quiet: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 
-  /* Fluid display scale */
-  --text-display-xl: clamp(4rem, 2rem + 9vw, 9rem);
-  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5rem);
+  /* Fluid display scale — greater contrast between monumental and intimate */
+  --text-display-xl: clamp(4.25rem, 1.9rem + 10vw, 10rem);
+  --text-display: clamp(2.75rem, 1.5rem + 5.4vw, 5.25rem);
   --text-headline: clamp(2rem, 1.4rem + 2.6vw, 3rem);
   --text-subhead: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-body-lg: clamp(1.18rem, 1.05rem + 0.5vw, 1.4rem);
 
   /* Motion — easing as Tailwind timing functions */
   --ease-surface: cubic-bezier(0.22, 1, 0.36, 1);
@@ -58,7 +60,8 @@
   --veil-ink-92: rgba(6, 5, 4, 0.92);
   --accent: var(--color-ember-amber); /* the candle in the dark room */
 
-  --halo-accent: 0 0 0.04em rgba(201, 130, 78, 0.5), 0 0 32px -8px var(--accent);
+  /* A whisper of light on a word, not a neon sign */
+  --halo-accent: 0 0 0.02em rgba(237, 231, 221, 0.22), 0 0 46px -16px var(--accent);
   --glow-accent-sm: 0 0 24px -6px var(--accent);
   --vignette: inset 0 0 220px 40px rgba(6, 5, 4, 0.7);
 
@@ -68,7 +71,7 @@
   --breath-deep: 2400ms;
   --breath-ambient: 18s;
 
-  --tracking-label: 0.12em;
+  --tracking-label: 0.22em;
   --gutter: clamp(1.5rem, 4vw, 6rem);
   --grain-opacity: 0.045;
 }
@@ -102,7 +105,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   overflow-x: hidden;
+}
+
+/* The memory voice, properly set: ligatures + oldstyle figures sit in
+   running text the way they do in a printed book. */
+h1, h2, h3, h4, .t-memory {
+  font-feature-settings: "kern" 1, "liga" 1, "dlig" 1, "onum" 1;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
 }
 
 /* The vignette — the room darkens at its edges */
@@ -150,7 +161,7 @@ body::after {
 /* ---- Typographic helpers (the brand voice) ------------------------- */
 .t-label {
   font-family: var(--font-quiet);
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: var(--tracking-label);
   color: var(--text-faint);

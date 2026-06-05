@@ -53,12 +53,9 @@ export default function Fragment({ fragrance, index, retint = false }: Props) {
         <Link className={styles.link} href={`/fragrance/${slug}`} aria-label={`${name} — ${state}`}>
           <div className={styles.imageWrap}>
             <div className={styles.image}>
-              <div
-                className={styles.imageInner}
-                style={{
-                  background: `radial-gradient(120% 95% at 35% 22%, ${tone}, var(--color-ink-900) 72%)`,
-                }}
-              />
+              {/* tonal, lit placeholder until art-directed photography
+                  lands (doc 11 §B6); composed entirely from --tone */}
+              <div className={styles.imageInner} />
             </div>
           </div>
           <div className={styles.meta}>

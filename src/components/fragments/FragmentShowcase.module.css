@@ -16,7 +16,8 @@
 .heading {
   font-family: var(--font-memory);
   font-size: var(--text-display);
-  line-height: 1.05;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   max-width: 16ch;
   margin-top: 1rem;
   text-wrap: balance;
