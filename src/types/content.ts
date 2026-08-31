@@ -48,6 +48,8 @@ interface FragmentBase {
   /** The state, stated as if you already know it. */
   state: string;
   image?: string;
+  /** Transparent cutout — the vessel floating free of any background. */
+  float?: string;
   /** A cinematic "film-still" of the vessel — used large on its page. */
   scene?: string;
 }

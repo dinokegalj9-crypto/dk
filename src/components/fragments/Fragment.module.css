@@ -86,6 +86,51 @@
   /* alive at rest — it drifts, the way a held breath does */
   animation: vessel-float 9s ease-in-out infinite;
 }
+/* the transparent cutout needs no mask — it already floats free */
+.shotFloat {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.shotImgFloat {
+  position: absolute;
+  inset: 0;
+  object-fit: contain;
+  transform: scale(1);
+  transition: transform var(--breath-deep) var(--ease-surface);
+}
+.featured:hover .shotImgFloat { transform: scale(1.04); }
+
+/* ---- pieces of glass drifting around the vessel -------------------- */
+.shards {
+  position: absolute;
+  inset: -4%;
+  pointer-events: none;
+}
+.shardsBack { z-index: 0; }
+.shardsFront { z-index: 2; }
+.shard {
+  position: absolute;
+  display: block;
+  aspect-ratio: 0.78;
+  background: linear-gradient(
+    140deg,
+    color-mix(in oklab, var(--tone) 62%, #ede7dd) 0%,
+    color-mix(in oklab, var(--tone) 40%, #0b0a09) 58%,
+    transparent 100%
+  );
+  clip-path: polygon(52% 0%, 100% 34%, 76% 100%, 16% 86%, 0% 38%);
+  transform: rotate(var(--r, 0deg));
+  animation-name: shard-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform;
+}
+@keyframes shard-drift {
+  from { transform: rotate(var(--r, 0deg)) translate3d(0, 0, 0); }
+  to { transform: rotate(calc(var(--r, 0deg) + 16deg)) translate3d(7px, -15px, 0); }
+}
+
 @keyframes vessel-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -97,6 +142,7 @@
 @media (prefers-reduced-motion: reduce) {
   .shot { animation: none; }
   .glow { animation: none; opacity: 0.14; }
+  .shard { animation: none; }
 }
 .shotImg {
   object-fit: cover;
